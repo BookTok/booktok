@@ -1,85 +1,75 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+<script>
+import { useStore } from './stores/store';
+import { mapActions, mapState } from 'pinia';
+import AppMessage from './components/AppMessage.vue'
+import AppMenu from './components/AppMenu.vue';
+
+
+export default {
+  methods: {
+    ...mapActions(useStore, ['', ''])
+  },
+  mounted() {
+
+  },
+  computed: {
+    ...mapState(useStore, {
+
+    }),
+    isAuthenticated() {
+      return this.user && Object.values(this.user).length !== 0;
+    },
+  },
+  components: {
+    AppMessage,
+    AppMenu
+  },
+  backgroundStyle() {
+    return {
+    backgroundImage: `url('/public/background.jpg')`,
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundAttachment: 'fixed',
+    height: '100vh',
+    overflowY: this.shouldScroll ? 'auto' : 'hidden'
+  };
+  },
+  data() {
+    return {
+      shouldScroll: true // Cambia esto según tus necesidades para activar/desactivar el scroll
+    };
+  }
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
+  <div :style="backgroundStyle">
+    <div class="container" :style="{ height: shouldScroll ? 'auto' : '100vh' }">
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <app-menu></app-menu>
+        <app-message v-for="(message, index) in messages" :key="message.id" :message="message"
+          :index="index"></app-message>
       </nav>
+      <RouterView/>
     </div>
-  </header>
-
-  <RouterView />
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css');
 
 nav {
-  width: 100%;
-  font-size: 12px;
   text-align: center;
-  margin-top: 2rem;
+  color: rgb(95, 191, 255)
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
+.container {
+  max-width: 90%;
+  height: 100%;
   background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 </style>
