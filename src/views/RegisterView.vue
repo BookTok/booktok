@@ -71,7 +71,7 @@ export default {
         <div class="formbold-form-wrapper">
             <Form :initial-values="register" :validation-schema="validationSchema" @submit="addUser()">
                 <div class="formbold-form-title">
-                    <h2 class="">Añadir Estudiante</h2>
+                    <h2 class="">Registrarse</h2>
                 </div>
 
                 <div class="formbold-input-flex">
@@ -106,18 +106,6 @@ export default {
                         <Field name="repetirContraseña" type="password" class="formbold-form-input" /><br />
                         <ErrorMessage name="repetirContraseña" class="validate-error" />
                     </div>
-                </div>
-
-                <div class="formbold-mb-3">
-                    <label for="direccion" class="formbold-form-label"> Dirección: </label>
-                    <Field name="direccion" type="text" v-model="register.address" class="formbold-form-input" /><br />
-                    <ErrorMessage name="direccion" class="validate-error" />
-                </div>
-
-                <div class="formbold-mb-3">
-                    <label for="cv" class="formbold-form-label"> Link Curriculum: </label>
-                    <Field name="cv" type="text" v-model="register.cv" class="formbold-form-input" /><br />
-                    <ErrorMessage name="cv" class="validate-error" />
                 </div>
 
                 <div class="formbold-checkbox-wrapper">
@@ -191,7 +179,7 @@ body {
     margin: 0 auto;
     max-width: 570px;
     width: 100%;
-    background: white;
+    background: beige;
     padding: 40px;
 }
 
@@ -360,8 +348,8 @@ body {
     padding: 14px 25px;
     border: none;
     font-weight: 500;
-    background-color: #6a64f1;
-    color: white;
+    background-color: #f5f5f5;
+    color: rgba(0,0,0,.55);
     cursor: pointer;
     margin-top: 25px;
 }
@@ -370,30 +358,8 @@ body {
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
 }
 
-.formbold-delete-button {
-    font-size: 14px;
-    border-radius: 3px;
-    padding: 8px 15px;
-    border: 1px solid #6a64f1;
-    background-color: transparent;
-    color: #6a64f1;
-    cursor: pointer;
-    margin-left: 5px;
-}
-
 .formbold-delete-button:hover {
     background-color: #eae7ff;
-}
-.formbold-add-button {
-    font-size: 16px;
-    border-radius: 5px;
-    padding: 14px 25px;
-    border: none;
-    background-color: #6a64f1;
-    color: white;
-    cursor: pointer;
-    margin-top: 5px;
-
 }
 
 .formbold-add-button:hover {

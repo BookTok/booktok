@@ -29,8 +29,12 @@ export default class APIService {
         );
     }
 
-    getStudent(id){
-        return this.apiClient.get('/student/' + id)
+    getBooksByGenre(genero){
+        return this.apiClient.get('/books/' + genero)
+    }
+
+    getBooksByReviews(){
+        return this.apiClient.get('/reviews')
     }
 
     modStudent(student) {
