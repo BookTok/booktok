@@ -43,6 +43,7 @@ export default {
 .container {
   text-align: center;
   background-color: #f8f9fa6b;
+  max-width: 100%;
 }
 
 .btn {

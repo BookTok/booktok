@@ -3,6 +3,7 @@ import { useStore } from './stores/store'
 import { mapActions, mapState } from 'pinia'
 import AppMessage from './components/AppMessage.vue'
 import AppMenu from './components/AppMenu.vue'
+import FooterView from './views/FooterView.vue';
 
 export default {
   methods: {
@@ -30,7 +31,8 @@ export default {
   },
   components: {
     AppMessage,
-    AppMenu
+    AppMenu,
+    FooterView
   },
   data() {
     return {
@@ -54,6 +56,7 @@ export default {
       </nav>
       <RouterView />
     </div>
+    <foother-view></foother-view>
   </div>
 </template>
 

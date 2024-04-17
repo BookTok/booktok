@@ -58,17 +58,13 @@ export default {
         async logIng() {
             try {
                 const response = await axios.post(SERVER + '/login', this.user)
-                if (response.data.accept === 1) {
                     localStorage.setItem('user', JSON.stringify(response.data))
                     this.addUser(response.data)
                     this.$router.push('/')
-                } else {
-                    this.$router.push('/')
-                    this.addMsgArray('danger', 'Error: no ha activado su cuenta, activela para iniciar sesión.')
-                }
 
             } catch (error) {
                 this.addMsgArray('danger', 'Error: datos incorrectos por favor revise que la contarseña sea la correcta')
+                this.$router.push('/log-in')
             }
         },
         async recover() {
