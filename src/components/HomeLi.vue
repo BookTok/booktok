@@ -27,7 +27,7 @@ export default {
             <span v-for="n in 5" :key="n" :class="{ filled: n <= libro.rating_average }">★</span>
         </div>
         <p class="description">Descripción: {{ libro.description }}</p>
-        <button class="details btn" @click="showDetails">Detalles</button>
+        <button class="details btn" @click="showDetails()">Detalles</button>
     </div>    
 </template>
 

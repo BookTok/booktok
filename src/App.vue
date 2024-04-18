@@ -56,7 +56,7 @@ export default {
       </nav>
       <RouterView />
     </div>
-    <foother-view></foother-view>
+    <footer-view></footer-view>
   </div>
 </template>
 

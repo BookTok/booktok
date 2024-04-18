@@ -44,6 +44,7 @@ export default {
   text-align: center;
   background-color: #f8f9fa6b;
   max-width: 100%;
+  margin-top: 2%;
 }
 
 .btn {

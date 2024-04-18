@@ -58,8 +58,8 @@ export default class APIService {
         return this.apiClient.post('/offers', offert)
     }
 
-    showOffer(id) {
-        return this.apiClient.get('/offers/' + id)
+    showBook(id) {
+        return this.apiClient.get('/books/' + id)
     }
 
     getCompany(cif) {
