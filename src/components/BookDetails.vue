@@ -2,11 +2,16 @@
 import APIService from '../axios/axios.js'
 import { useStore } from '@/stores/store'
 import { mapState, mapActions } from 'pinia'
+import axios from 'axios'
+import CommentsBook from './CommentsBook.vue'
+const SERVER = import.meta.env.VITE_URL_API
 
 export default {
   data() {
     return {
-      book: {}
+      book: {},
+      rating: "",
+      reviews: []
     }
   },
   props: {
@@ -17,46 +22,61 @@ export default {
       user: 'user'
     })
   },
+  components: {
+    CommentsBook
+  },
   async mounted() {
-    const apiService = new APIService(this.user.token)
     try {
-      const response = await apiService.showBook(Number(this.id))
+      const response = await axios.get(SERVER + '/books/' + this.id)
       this.book = response.data.data
     } catch (error) {
       this.addMsgArray('danger', 'No se puede conetar con el servidor')
     }
-    console.log(this.book);
+    console.log(this.book)
+
+    try {
+      const response = await axios.get(SERVER + '/averange/' + this.id)
+      this.rating = response.data
+    } catch (error) {
+      this.addMsgArray('danger', 'No se puede conetar con el servidor')
+    }
+    console.log(this.rating.total)
+
+    try {
+      const response = await axios.get(SERVER + '/reviews/' + this.id)
+      this.reviews = response.data
+    } catch (error) {
+      this.addMsgArray('danger', 'No se puede conetar con el servidor')
+    }
+    console.log(this.reviews)
   },
   methods: {
     ...mapActions(useStore, ['addMsgArray']),
-    async softDelete() {
-      const apiService = new APIService(this.user.token)
-      try {
-        await apiService.softDelet(Number(this.offer.id))
-        this.$router.push('/')
-      } catch (error) {
-        this.addMsgArray('danger', 'No se pudo eliminar la oferta')
-      }
-    },
-    async deshablitar() {
-      const apiService = new APIService(this.user.token)
-      try {
-        await apiService.deshabiliti(Number(this.offer.id))
-        this.$router.push('/')
-      } catch (error) {
-        this.addMsgArray('danger', 'No se pudo deshabilitar la oferta')
-      }
-    }
+    // async softDelete() {
+    //   const apiService = new APIService(this.user.token)
+    //   try {
+    //     await apiService.softDelet(Number(this.offer.id))
+    //     this.$router.push('/')
+    //   } catch (error) {
+    //     this.addMsgArray('danger', 'No se pudo eliminar la oferta')
+    //   }
+    // },
+    // async deshablitar() {
+    //   const apiService = new APIService(this.user.token)
+    //   try {
+    //     await apiService.deshabiliti(Number(this.offer.id))
+    //     this.$router.push('/')
+    //   } catch (error) {
+    //     this.addMsgArray('danger', 'No se pudo deshabilitar la oferta')
+    //   }
+    // }
   }
 }
 </script>
 <template>
-  <div class="row">
-    <div class="details col-12">
+  <div class="row details">
+    <div class="col-4">
       <img :src="book.pic" :alt="book.name" />
-      <h5>{{ book.name }}</h5>
-      <p><span>Autor: </span>{{ book.author.name }}</p>
-      <p><span>Editorial: </span>{{ book.publisher.name }}</p>
       <p><span>Descripción: </span>{{ book.description }}</p>
       <p><span>Fecha publicación: </span>{{ book.publication }}</p>
       <!-- <button
@@ -74,6 +94,19 @@ export default {
         Deshabilitar
       </button> -->
     </div>
+    <div class="col-4">
+      <h5>{{ book.name }}</h5>
+      <p v-if="book.author"><span>Autor: </span>{{ book.author.name }}</p>
+      <p v-if="book.publisher"><span>Editorial: </span>{{ book.publisher.name }}</p>
+    </div>
+    <div class="col-4">
+      <div class="rating">
+        <span v-for="n in 5" :key="n" :class="{ filled: n <= rating.total }">★</span>
+        {{rating.total}}/5
+      </div>
+      <!-- hacer nueva clase componente -->
+      <comments-book v-for="comments in reviews.data" :comments="comments" :key="comments"></comments-book>
+    </div>
   </div>
 </template>
 <style scoped>
@@ -82,7 +115,8 @@ export default {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 100%;
+  max-width: -webkit-fill-available;
+  max-height: -webkit-fill-available;
 }
 
 .details h5 {
@@ -116,5 +150,21 @@ export default {
   margin-right: 10px;
   margin-bottom: 10px;
   border: none;
+}
+
+img {
+  max-width: -webkit-fill-available;
+  max-height: -webkit-fill-available;
+}
+
+.rating{
+    font-style: italic;
+}
+.rating span {
+    color: rgb(255, 241, 162); /* Color de la estrella */
+    font-size: 24px; /* Tamaño de la estrella */
+}
+.rating .filled {
+    color: rgb(255, 221, 0); /* Color de la estrella rellena */
 }
 </style>

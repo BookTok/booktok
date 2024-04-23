@@ -4,30 +4,22 @@ import { mapState, mapActions } from 'pinia';
 
 export default {
     props: {
-        review: Object,
+        comments: Object,
     },
     computed: {
         ...mapState(useStore, {
             user: 'user'
         })
     },
-    methods:{
-        ...mapActions(useStore, ['addMsgArray']),
-        showDetails(id){
-            this.$router.push('/show-details/book/' + id)
-        },
-    }
 }
 </script>
 <template>
-    <div class="col-sm-12 col-md-6 col-lg-4 cart">
-        <img :src='libro.pic' :alt="libro.name">
-        <h5>{{ libro.name }}</h5>
+    <div class="col-12">
+        <h6>{{ comments.id_user }}</h6>
         <div class="rating">
-            <span v-for="n in 5" :key="n" :class="{ filled: n <= libro.rating_average }">★</span>
+            <span v-for="n in 5" :key="n" :class="{ filled: n <= comments.rating }">★</span>
         </div>
-        <p class="description">Descripción: {{ libro.description }}</p>
-        <button class="details btn" @click="showDetails(libro.id)">Detalles</button>
+        <p class="comments">Comentario: {{ comments.review }}</p>
     </div>    
 </template>
 

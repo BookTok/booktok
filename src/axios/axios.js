@@ -62,8 +62,8 @@ export default class APIService {
         return this.apiClient.get('/books/' + id)
     }
 
-    getCompany(cif) {
-        return this.apiClient.get('/companyCIF/' + cif)
+    getAuthor(id) {
+        return this.apiClient.get('/author/' + id)
     }
     singup(idOffer) {
         return this.apiClient.post(`/apply/${idOffer}`);
