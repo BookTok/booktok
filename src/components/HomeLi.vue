@@ -4,7 +4,7 @@ import { mapState, mapActions } from 'pinia';
 
 export default {
     props: {
-        review: Object,
+        libro: Object,
     },
     computed: {
         ...mapState(useStore, {

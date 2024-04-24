@@ -71,11 +71,11 @@ export default class APIService {
     getUsersOffer(idOffer) {
         return this.apiClient.get('/userOffert/' + idOffer)
     }
-    getStudentEmail(email) {
-        return this.apiClient.get('/studentEmail/' + email)
+    getUserEmail(email) {
+        return this.apiClient.get('/userEmail/' + email)
     }
-    getCompanyEmail(email) {
-        return this.apiClient.get('/companyEmail/' + email)
+    getAuthorEmail(email) {
+        return this.apiClient.get('/authorEmail/' + email)
     }
     deleteCompany(CIF) {
         return this.apiClient.delete('/companyDelete/' + CIF)

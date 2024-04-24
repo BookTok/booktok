@@ -7,12 +7,15 @@ import FooterView from './views/FooterView.vue';
 
 export default {
   methods: {
-    ...mapActions(useStore, ['', ''])
+    ...mapActions(useStore, ['loadUser'])
   },
-  mounted() {},
+  mounted() {
+    this.loadUser()
+  },
   computed: {
     ...mapState(useStore, {
       messages: 'messages',
+      user: 'user'
     }),
     isAuthenticated() {
       return this.user && Object.values(this.user).length !== 0

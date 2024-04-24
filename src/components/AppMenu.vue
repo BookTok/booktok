@@ -22,6 +22,9 @@ export default {
     },
     logIn(){
       this.$router.push("/log-in")
+    },
+    profile(){
+      this.$router.push("/profile")
     }
   }
 }
@@ -98,7 +101,7 @@ export default {
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <a v-if="!isAuthenticated" @click="logIn" class="dropdown-item" href="#">Iniciar Sesión</a>
             <a v-if="!isAuthenticated" @click="register" class="dropdown-item" href="#">Registrarse</a>
-            <a v-if="isAuthenticated" @click="profile(user.id)" class="dropdown-item" href="#">Perfil</a>
+            <a v-if="isAuthenticated" @click="profile" class="dropdown-item" href="#">Perfil</a>
             <a v-if="isAuthenticated" @click="logOut" class="dropdown-item" href="#">Log Out</a>
           </div>
         </div>
