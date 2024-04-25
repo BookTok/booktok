@@ -6,7 +6,8 @@ import APIService from '../axios/axios.js'
 export default {
   data() {
     return {
-      usuario: {}
+      usuario: {},
+      listas: []
     }
   },
   computed: {
@@ -74,9 +75,21 @@ export default {
           <p><strong>Apellidos:</strong> {{ this.usuario.surname }}</p>
           <p><strong>Email:</strong> {{ this.usuario.email }}</p>
         </div>
-        <div class="col-6">
-          <button class="btn btn-info mt-2" @click="edit">Editar Perfil</button>
-          <button class="btn btn-danger mt-2" @click="eliminar">Eliminar Perfil</button>
+        <div class="col-6 text-end">
+          <button class="btn btn-light mt-2" @click="edit">Editar Perfil</button>
+          <button class="btn btn-secondary mt-2" @click="eliminar">Eliminar Perfil</button>
+        </div>
+      </div>
+      <div class="row">
+        <h4>Listas</h4>
+        <div class="col-4">
+          <h5>LEIDOS</h5>
+        </div>
+        <div class="col-4">
+          <h5>LEYENDO</h5>
+        </div>
+        <div class="col-4">
+          <h5>WISHLIST</h5>
         </div>
       </div>
     </div>
@@ -85,7 +98,7 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 70%;
+  max-width: 90%;
 }
 
 .btn {

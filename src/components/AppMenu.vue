@@ -47,13 +47,13 @@ export default {
             <span class="navbar-toggler-icon"></span>
           </button>
           <div
-            class="collapse navbar-collapse justify-content-md-start justify-content-lg-start"
+            class="collapse navbar-collapse justify-content-xs-start justify-content-md-start justify-content-lg-start"
             id="navbarNavAltMarkup"
           >
             <div class="navbar-nav">
               <div class="dropdown">
                 <a
-                  class="nav-link dropdown-toggle"
+                  class="nav-link dropdown-toggle text-start"
                   href="#"
                   role="button"
                   id="dropdownMenuLink"
@@ -72,8 +72,8 @@ export default {
                   <a class="dropdown-item" href="#">Otros</a>
                 </div>
               </div>
-              <div class="text-center">
-                <a class="nav-link d-flex align-items-center justify-content-center" href="#"
+              <div class="text-start">
+                <a class="nav-link d-flex text-start" href="#"
                   ><span class="material-symbols-outlined"> search </span>Buscar</a
                 >
               </div>
