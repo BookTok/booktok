@@ -10,8 +10,9 @@ export default {
   data() {
     return {
       book: {},
-      rating: "",
-      reviews: []
+      rating: '',
+      reviews: [],
+      userRating: 0
     }
   },
   props: {
@@ -51,7 +52,7 @@ export default {
     console.log(this.reviews)
   },
   methods: {
-    ...mapActions(useStore, ['addMsgArray']),
+    ...mapActions(useStore, ['addMsgArray'])
     // async softDelete() {
     //   const apiService = new APIService(this.user.token)
     //   try {
@@ -98,14 +99,30 @@ export default {
       <h5>{{ book.name }}</h5>
       <p v-if="book.author"><span>Autor: </span>{{ book.author.name }}</p>
       <p v-if="book.publisher"><span>Editorial: </span>{{ book.publisher.name }}</p>
+      <form>
+        <span>Valoración</span><br />
+        <div class="user-rating">
+          <span v-for="n in 5" :key="n" @click="userRating = n" :class="{ filled: n <= userRating }"
+            >★</span
+          >
+          <textarea type="text" placeholder="Escribe tu comentario"></textarea>
+        </div>
+        <button class="btn btn-light">Enviar</button>
+      </form>
     </div>
     <div class="col-4">
       <div class="rating">
         <span v-for="n in 5" :key="n" :class="{ filled: n <= rating.total }">★</span>
-        {{rating.total}}/5
+        {{ rating.total }}/5
+      </div>
+      <div class="comments">
+        <comments-book
+          v-for="comments in reviews.data"
+          :comments="comments"
+          :key="comments"
+        ></comments-book>
       </div>
       <!-- hacer nueva clase componente -->
-      <comments-book v-for="comments in reviews.data" :comments="comments" :key="comments"></comments-book>
     </div>
   </div>
 </template>
@@ -125,6 +142,10 @@ export default {
 
 .details p {
   margin-bottom: 5px;
+}
+
+span {
+  color: black;
 }
 
 .details span {
@@ -157,14 +178,38 @@ img {
   max-height: -webkit-fill-available;
 }
 
-.rating{
-    font-style: italic;
+.rating {
+  font-style: italic;
 }
 .rating span {
-    color: rgb(255, 241, 162); /* Color de la estrella */
-    font-size: 24px; /* Tamaño de la estrella */
+  color: rgb(255, 241, 162); /* Color de la estrella */
+  font-size: 24px; /* Tamaño de la estrella */
 }
 .rating .filled {
-    color: rgb(255, 221, 0); /* Color de la estrella rellena */
+  color: rgb(255, 221, 0); /* Color de la estrella rellena */
+}
+
+.user-rating span {
+  color: #ccc; /* Color de estrella sin rellenar */
+  font-size: 24px; /* Tamaño de la estrella */
+  cursor: pointer; /* Cambia el cursor al pasar sobre ellas */
+}
+.user-rating .filled {
+  color: #ffcc00; /* Color de estrella rellenada */
+}
+
+textarea {
+  height: 100px;
+  width: -webkit-fill-available;
+  resize: none;
+}
+
+form {
+  margin-top: 20%;
+}
+
+.comments {
+  max-height: 80%; /* Altura máxima */
+  overflow-x: auto; /* Scroll horizontal */
 }
 </style>
