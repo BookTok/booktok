@@ -99,7 +99,8 @@ export default {
       <h5>{{ book.name }}</h5>
       <p v-if="book.author"><span>Autor: </span>{{ book.author.name }}</p>
       <p v-if="book.publisher"><span>Editorial: </span>{{ book.publisher.name }}</p>
-      <form>
+      <div v-if="this.user.rol == 'REG'">
+        <form>
         <span>Valoración</span><br />
         <div class="user-rating">
           <span v-for="n in 5" :key="n" @click="userRating = n" :class="{ filled: n <= userRating }"
@@ -109,6 +110,7 @@ export default {
         </div>
         <button class="btn btn-light">Enviar</button>
       </form>
+      </div>
     </div>
     <div class="col-4">
       <div class="rating">
