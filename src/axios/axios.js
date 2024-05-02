@@ -92,4 +92,7 @@ export default class APIService {
     getStudentCycle(id) {
         return this.apiClient.get('/studentCicles/' + id)
     }
+    getBookByStatus(id, status){
+        return this.apiClient.get('/book-status/' + id + '/' + status)
+    }
 }
