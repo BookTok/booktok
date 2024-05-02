@@ -7,7 +7,11 @@ export default {
   data() {
     return {
       usuario: {},
-      listas: []
+      listas: [],
+      readBooks: [],
+      readingBooks: [],
+      wishlistBooks: [],
+      books: []
     }
   },
   computed: {
@@ -27,6 +31,19 @@ export default {
       } else {
         const responseComapny = await apiService.getPublisherEmail(this.user.email)
         this.usuario = responseComapny.data
+      }
+    } catch (error) {
+      this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
+    }
+
+    try {
+      if (this.user.rol === 'REG') {
+        const read = await apiService.getBookByStatus(this.usuario.id, 'READ')
+        this.readBooks = read.data
+        const reading = await apiService.getBookByStatus(this.usuario.id, 'READING')
+        this.readingBooks = reading.data
+        const wish = await apiService.getBookByStatus(this.usuario.id, 'WISH')
+        this.wishlistBooks = wish.data
       }
     } catch (error) {
       this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
@@ -57,7 +74,19 @@ export default {
       } catch (error) {
         this.addMsgArray('danger', 'Problemas al intentar eliminar el perfil, vuelva a intentarlo')
       }
-    }
+    },
+    viewList(listName) {
+      let booksData;
+      if (listName == 'READ') {
+        booksData = this.readBooks.data
+      } else if (listName == 'READING') {
+        booksData = this.readingBooks.data
+      } else {
+        booksData = this.wishlistBooks.data
+      }
+      this.$router.push({ path: "/book-list", query: { books: JSON.stringify(booksData) } });
+    },
+    
   }
 }
 </script>
@@ -70,7 +99,7 @@ export default {
     <div class="card-body">
       <div class="row">
         <div class="col-md-6">
-          <img :src="this.usuario.pic" :alt="this.usuario.name" />
+          <img class="icon" :src="this.usuario.pic" :alt="this.usuario.name" />
           <p><strong>Nombre:</strong> {{ this.usuario.name }}</p>
           <p><strong>Apellidos:</strong> {{ this.usuario.surname }}</p>
           <p><strong>Email:</strong> {{ this.usuario.email }}</p>
@@ -80,16 +109,34 @@ export default {
           <button class="btn btn-secondary mt-2" @click="eliminar">Eliminar Perfil</button>
         </div>
       </div>
-      <div class="row">
+      <div class="row lists">
         <h4>Listas</h4>
         <div class="col-4">
           <h5>LEIDOS</h5>
+          <div class="folder" @click="viewList('READ')">
+            <!-- <img src="/carpeta-leidos.png" alt="Leídos" /> -->
+            <div class="thumbnails" v-if="readBooks.data">
+              <img class="book-pic" v-for="book in readBooks.data.slice(0, 3)" :key="book.id" :src="book.pic" />
+            </div>
+          </div>
         </div>
         <div class="col-4">
           <h5>LEYENDO</h5>
+          <div class="folder" @click="viewList('READING')">
+            <!-- <img src="/carpeta-leyendo.png" alt="Leyendo" /> -->
+            <div class="thumbnails" v-if="readingBooks.data">
+              <img class="book-pic" v-for="book in readingBooks.data.slice(0, 3)" :key="book.id" :src="book.id_book.pic" />
+            </div>
+          </div>
         </div>
         <div class="col-4">
           <h5>WISHLIST</h5>
+          <div class="folder" @click="viewList('WISH')">
+            <!-- <img src="/carpeta-wishlist.png" alt="Wishlist" /> -->
+            <div class="thumbnails" v-if="wishlistBooks.data">
+              <img class="book-pic" v-for="book in wishlistBooks.data.slice(0, 3)" :key="book.id" :src="book.pic" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -105,12 +152,23 @@ export default {
   margin-right: 15px;
 }
 
-img {
+.icon {
   width: 200px; /* ajusta el tamaño de la imagen */
   height: 200px; /* ajusta el tamaño de la imagen */
   border-radius: 50%; /* esto convierte la imagen en un círculo */
   overflow: hidden;
   object-fit: cover;
   border: 3px solid rgba(255, 235, 205, 0.664);
+}
+
+.lists {
+  background-color: #ffebcd5d;
+  border-radius: 8px;
+}
+
+.book-pic{
+    height: 100px;
+    width: 75px;
+    object-fit: cover;
 }
 </style>

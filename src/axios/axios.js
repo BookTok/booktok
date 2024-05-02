@@ -48,4 +48,7 @@ export default class APIService {
         return this.apiClient.get('/authorEmail/' + email)
     }
     
+    getBookByStatus(id, status){
+        return this.apiClient.get('/book-status/' + id + '/' + status)
+    }
 }
