@@ -32,44 +32,14 @@ export default class APIService {
     getBooksByGenre(genero){
         return this.apiClient.get('/books/' + genero)
     }
-
     getBooksByReviews(){
         return this.apiClient.get('/reviews')
     }
-
-    modStudent(student) {
-        return this.apiClient.put('/user/student/update/' + student.id, student)
-    }
-
-    getOffers() {
-        return this.apiClient.get('/offers')
-    }
-    getOffersPage(page) {
-        return this.apiClient.get('/offers?page=' + page)
-    }
-    getOfferByCP(cif) {
-        return this.apiClient.get('/offerByCP/' + cif)
-    }
-    modCompany(company) {
-        return this.apiClient.put('/user/company/update/' + company.id, company)
-
-    }
-    addOffert(offert) {
-        return this.apiClient.post('/offers', offert)
-    }
-
     showBook(id) {
         return this.apiClient.get('/books/' + id)
     }
-
     getAuthor(id) {
         return this.apiClient.get('/author/' + id)
-    }
-    singup(idOffer) {
-        return this.apiClient.post(`/apply/${idOffer}`);
-    }
-    getUsersOffer(idOffer) {
-        return this.apiClient.get('/userOffert/' + idOffer)
     }
     getUserEmail(email) {
         return this.apiClient.get('/userEmail/' + email)
@@ -77,19 +47,5 @@ export default class APIService {
     getAuthorEmail(email) {
         return this.apiClient.get('/authorEmail/' + email)
     }
-    deleteCompany(CIF) {
-        return this.apiClient.delete('/companyDelete/' + CIF)
-    }
-    deleteStudent(id) {
-        return this.apiClient.delete('/studentDelete/' + id)
-    }
-    softDelet(id) {
-        return this.apiClient.delete('/offersDelete/' + id)
-    }
-    deshabiliti(id) {
-        return this.apiClient.put('/offersDeactivate/' + id)
-    }
-    getStudentCycle(id) {
-        return this.apiClient.get('/studentCicles/' + id)
-    }
+    
 }

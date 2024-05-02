@@ -12,7 +12,10 @@ export default {
       book: {},
       rating: '',
       reviews: [],
-      userRating: 0
+      review: {
+        review: '',
+        rating: 0
+      }
     }
   },
   props: {
@@ -52,7 +55,16 @@ export default {
     console.log(this.reviews)
   },
   methods: {
-    ...mapActions(useStore, ['addMsgArray'])
+    ...mapActions(useStore, ['addMsgArray']),
+    async makeReview(){
+      const apiService = new APIService(this.user.token)
+      try {
+        await apiService.softDelet(Number(this.offer.id))
+        this.$router.push('/')
+      } catch (error) {
+        this.addMsgArray('danger', 'No se pudo eliminar la oferta')
+      }
+    }
     // async softDelete() {
     //   const apiService = new APIService(this.user.token)
     //   try {
@@ -102,11 +114,14 @@ export default {
       <div v-if="this.user.rol == 'REG'">
         <form>
         <span>Valoración</span><br />
+
         <div class="user-rating">
-          <span v-for="n in 5" :key="n" @click="userRating = n" :class="{ filled: n <= userRating }"
+          <input type="number" v-model="review.id_book" hidden>
+          <input type="number" v-model="review.id_user">
+          <span v-for="n in 5" :key="n" @click="review.rating = n" :class="{ filled: n <= userRating }" v-model="review.rating"
             >★</span
           >
-          <textarea type="text" placeholder="Escribe tu comentario"></textarea>
+          <textarea type="text" v-model="review.review" placeholder="Escribe tu comentario"></textarea>
         </div>
         <button class="btn btn-light">Enviar</button>
       </form>

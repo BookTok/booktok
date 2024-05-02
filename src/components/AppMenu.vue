@@ -25,6 +25,9 @@ export default {
     },
     profile(){
       this.$router.push("/profile")
+    },
+    index(){
+      this.$router.push("/")
     }
   }
 }
@@ -32,7 +35,7 @@ export default {
 
 <template>
   <nav class="row">
-    <div class="col-6 border-top border-bottom border-light bg-light">
+    <div class="col-4 border-top border-bottom border-light bg-light">
       <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
           <button
@@ -83,7 +86,14 @@ export default {
       </nav>
     </div>
     <div
-      class="col-6 border-top border-bottom border-light bg-light d-flex align-items-center justify-content-end text-center"
+      class="col-4 border-top border-bottom border-light bg-light d-flex align-items-center justify-content-end text-center"
+    >
+    <div @click="index()">
+      <img src="/Book__1.png" alt="booktok">
+    </div>
+    </div>
+    <div
+      class="col-4 border-top border-bottom border-light bg-light d-flex align-items-center justify-content-end text-center"
     >
       <div class="navbar-nav">
         <div class="dropdown align-items-center justify-content-end" style="color: rgba(0,0,0,.55)">
@@ -109,4 +119,10 @@ export default {
     </div>
   </nav>
 </template>
-<style scoped></style>
+<style scoped>
+img{
+  height: 20%;
+  width: 20%;
+  cursor: pointer;
+}
+</style>
