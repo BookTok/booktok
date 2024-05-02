@@ -38,7 +38,7 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/book-list/:books',
+      path: '/book-list/:status',
       name: 'book-list',
       component: BookList,
       props: true,

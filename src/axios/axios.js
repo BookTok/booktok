@@ -41,6 +41,9 @@ export default class APIService {
     getAuthor(id) {
         return this.apiClient.get('/author/' + id)
     }
+    getPublisher(id) {
+        return this.apiClient.get('/publisher/' + id)
+    }
     getUserEmail(email) {
         return this.apiClient.get('/userEmail/' + email)
     }

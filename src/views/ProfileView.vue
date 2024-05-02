@@ -11,7 +11,6 @@ export default {
       readBooks: [],
       readingBooks: [],
       wishlistBooks: [],
-      books: []
     }
   },
   computed: {
@@ -76,15 +75,7 @@ export default {
       }
     },
     viewList(listName) {
-      let booksData;
-      if (listName == 'READ') {
-        booksData = this.readBooks.data
-      } else if (listName == 'READING') {
-        booksData = this.readingBooks.data
-      } else {
-        booksData = this.wishlistBooks.data
-      }
-      this.$router.push({ path: "/book-list", query: { books: JSON.stringify(booksData) } });
+      this.$router.push("/book-list/" + listName);
     },
     
   }
@@ -116,7 +107,7 @@ export default {
           <div class="folder" @click="viewList('READ')">
             <!-- <img src="/carpeta-leidos.png" alt="Leídos" /> -->
             <div class="thumbnails" v-if="readBooks.data">
-              <img class="book-pic" v-for="book in readBooks.data.slice(0, 3)" :key="book.id" :src="book.pic" />
+              <img class="book-pic" v-for="book in readBooks.data.slice(0, 3)" :key="book.id" :src="book.id_book.pic" />
             </div>
           </div>
         </div>
@@ -134,7 +125,7 @@ export default {
           <div class="folder" @click="viewList('WISH')">
             <!-- <img src="/carpeta-wishlist.png" alt="Wishlist" /> -->
             <div class="thumbnails" v-if="wishlistBooks.data">
-              <img class="book-pic" v-for="book in wishlistBooks.data.slice(0, 3)" :key="book.id" :src="book.pic" />
+              <img class="book-pic" v-for="book in wishlistBooks.data.slice(0, 3)" :key="book.id" :src="book.id_book.pic" />
             </div>
           </div>
         </div>
@@ -170,5 +161,8 @@ export default {
     height: 100px;
     width: 75px;
     object-fit: cover;
+}
+.folder{
+  cursor: pointer;
 }
 </style>
