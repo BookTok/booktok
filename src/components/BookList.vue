@@ -9,7 +9,10 @@ export default {
       books: [], // Inicializamos books como un array vacío
       usuario: [],
       author: '',
-      publisher: ''
+      publisher: '',
+      reviews: [],
+      rating: '',
+      comment: ''
     }
   },
   props: {
@@ -20,7 +23,7 @@ export default {
       user: 'user'
     })
   },
-  async mounted(){
+  async mounted() {
     const apiService = new APIService(this.user.token)
     try {
       if (this.user.rol === 'REG') {
@@ -34,27 +37,56 @@ export default {
     }
 
     for (const book of this.books) {
-          book.author = await apiService.getAuthor(book.id_book.id_author);
-          book.publisher = await apiService.getPublisher(book.id_book.id_publisher);
-        }
+      const aut = await apiService.getAuthor(book.id_book.id_author)
+      book.author = aut.data.data.user.name
+      const pub = await apiService.getPublisher(book.id_book.id_publisher)
+      book.publisher = pub.data.data.user.name
+    }
+
+    if (this.status == 'READ') {
+      for (const book of this.books) {
+        const rat = await apiService.getBookReviewUser(this.usuario.id, book.id_book.id)
+        book.rating = rat.data.data.rating
+        book.comment = rat.data.data.review
+      }
+    }
   },
-  methods:{
+  methods: {
     ...mapActions(useStore, ['cleanUser', 'addMsgArray']),
+    updateRead(id) {
+      this.$router.push('/update-read/book/' + Number(id))
+    }
   }
 }
 </script>
 
 <template>
   <div class="folder">
-    <h5>{{ status }}</h5>
+    <h4>{{ status }}</h4>
     <div class="thumbnails">
       <div class="thumbnail" v-for="book in books" :key="book.id">
         <div class="thumbnail-content">
           <img :src="book.id_book.pic" />
           <div class="info">
-            <p>{{ book.id_book.name }}</p>
-            <p>{{ book.author.data.data.user.name }}</p>
-            <p>{{ book.publisher.data.data.user.name }}</p>
+            <h5>{{ book.id_book.name }}</h5>
+            <p>{{ book.author }}</p>
+            <p>{{ book.publisher }}</p>
+            <div v-if="status == 'READING'">
+              <button class="btn btn-light" @click="updateRead(book.id_book.id)">
+                Actualizar Estado
+              </button>
+            </div>
+            <div v-if="status == 'READ'" class="review">
+              <h5>Tu review</h5>
+              <div class="rating">
+                <span v-for="n in 5" :key="n" :class="{ filled: n <= book.rating }">★</span>
+              </div>
+              <textarea
+                type="text"
+                v-model="book.comment"
+                placeholder="Escribe tu comentario"
+              ></textarea>
+            </div>
           </div>
         </div>
       </div>
@@ -85,12 +117,33 @@ export default {
 
 .thumbnail-content {
   display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
+  flex-wrap: wrap;
+  flex-direction: row;
 }
 
 .info {
   margin-top: 10px;
   margin-left: 5px; /* Espacio entre la imagen y la información */
+}
+
+.rating {
+  font-style: italic;
+}
+.rating span {
+  color: rgb(255, 241, 162); /* Color de la estrella */
+  font-size: 24px; /* Tamaño de la estrella */
+}
+.rating .filled {
+  color: rgb(255, 221, 0); /* Color de la estrella rellena */
+}
+textarea {
+  height: 100px;
+  width: -webkit-fill-available;
+  resize: none;
+}
+
+.review {
+  background-color: rgba(245, 245, 220, 0.619);
+  border-radius: 8px;
 }
 </style>

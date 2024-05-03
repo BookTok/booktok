@@ -1,6 +1,6 @@
 <script>
 import { useStore } from '@/stores/store';
-import { mapState, mapActions } from 'pinia';
+import { mapState } from 'pinia';
 
 export default {
     props: {

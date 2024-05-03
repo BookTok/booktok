@@ -6,6 +6,7 @@ import LoginView from '@/views/LoginView.vue'
 import BookDetails from '@/components/BookDetails.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import BookList from '@/components/BookList.vue'
+import UpdateRead from '@/views/UpdateRead.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +43,13 @@ const router = createRouter({
       name: 'book-list',
       component: BookList,
       props: true,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/update-read/book/:id',
+      name: 'update-read',
+      props: true,
+      component: UpdateRead,
       meta: { requiresAuth: true }
     },
   ]

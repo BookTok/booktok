@@ -10,7 +10,7 @@ export default {
       listas: [],
       readBooks: [],
       readingBooks: [],
-      wishlistBooks: [],
+      wishlistBooks: []
     }
   },
   computed: {
@@ -75,9 +75,8 @@ export default {
       }
     },
     viewList(listName) {
-      this.$router.push("/book-list/" + listName);
-    },
-    
+      this.$router.push('/book-list/' + listName)
+    }
   }
 }
 </script>
@@ -89,13 +88,19 @@ export default {
     </div>
     <div class="card-body">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-4">
           <img class="icon" :src="this.usuario.pic" :alt="this.usuario.name" />
           <p><strong>Nombre:</strong> {{ this.usuario.name }}</p>
           <p><strong>Apellidos:</strong> {{ this.usuario.surname }}</p>
           <p><strong>Email:</strong> {{ this.usuario.email }}</p>
         </div>
-        <div class="col-6 text-end">
+        <div class="col-4 text-center">
+          <button class="btn mt-2">
+            <span class="material-symbols-outlined"> diversity_4 </span> Amigos
+          </button>
+          <button class="btn mt-2"><span class="material-symbols-outlined"> group </span>Seguidos</button>
+        </div>
+        <div class="col-4 text-end">
           <button class="btn btn-light mt-2" @click="edit">Editar Perfil</button>
           <button class="btn btn-secondary mt-2" @click="eliminar">Eliminar Perfil</button>
         </div>
@@ -107,7 +112,12 @@ export default {
           <div class="folder" @click="viewList('READ')">
             <!-- <img src="/carpeta-leidos.png" alt="Leídos" /> -->
             <div class="thumbnails" v-if="readBooks.data">
-              <img class="book-pic" v-for="book in readBooks.data.slice(0, 3)" :key="book.id" :src="book.id_book.pic" />
+              <img
+                class="book-pic"
+                v-for="book in readBooks.data.slice(0, 3)"
+                :key="book.id"
+                :src="book.id_book.pic"
+              />
             </div>
           </div>
         </div>
@@ -116,7 +126,12 @@ export default {
           <div class="folder" @click="viewList('READING')">
             <!-- <img src="/carpeta-leyendo.png" alt="Leyendo" /> -->
             <div class="thumbnails" v-if="readingBooks.data">
-              <img class="book-pic" v-for="book in readingBooks.data.slice(0, 3)" :key="book.id" :src="book.id_book.pic" />
+              <img
+                class="book-pic"
+                v-for="book in readingBooks.data.slice(0, 3)"
+                :key="book.id"
+                :src="book.id_book.pic"
+              />
             </div>
           </div>
         </div>
@@ -125,7 +140,12 @@ export default {
           <div class="folder" @click="viewList('WISH')">
             <!-- <img src="/carpeta-wishlist.png" alt="Wishlist" /> -->
             <div class="thumbnails" v-if="wishlistBooks.data">
-              <img class="book-pic" v-for="book in wishlistBooks.data.slice(0, 3)" :key="book.id" :src="book.id_book.pic" />
+              <img
+                class="book-pic"
+                v-for="book in wishlistBooks.data.slice(0, 3)"
+                :key="book.id"
+                :src="book.id_book.pic"
+              />
             </div>
           </div>
         </div>
@@ -155,14 +175,29 @@ export default {
 .lists {
   background-color: #ffebcd5d;
   border-radius: 8px;
+  margin-top: 5px;
 }
 
-.book-pic{
-    height: 100px;
-    width: 75px;
-    object-fit: cover;
+.book-pic {
+  height: 100px;
+  width: 75px;
+  object-fit: cover;
+  margin-bottom: 10px;
 }
-.folder{
+.folder {
   cursor: pointer;
+}
+
+h4 {
+  margin-bottom: 2%;
+  text-align: center;
+}
+.material-symbols-outlined {
+  font-size: 35px;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
 }
 </style>

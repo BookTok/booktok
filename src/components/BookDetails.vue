@@ -117,8 +117,8 @@ export default {
 
         <div class="user-rating">
           <input type="number" v-model="review.id_book" hidden>
-          <input type="number" v-model="review.id_user">
-          <span v-for="n in 5" :key="n" @click="review.rating = n" :class="{ filled: n <= userRating }"
+          <input type="number" v-model="review.id_user" hidden>
+          <span v-for="n in 5" :key="n" @click="review.rating = n" :class="{ filled: n <= review.rating }"
             >★</span
           >
           <textarea type="text" v-model="review.review" placeholder="Escribe tu comentario"></textarea>
