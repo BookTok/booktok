@@ -95,9 +95,6 @@ export default {
 </template>
 
 <style scoped>
-.folder {
-  /* Estilos para el contenedor de la carpeta */
-}
 
 .thumbnails {
   display: flex;
