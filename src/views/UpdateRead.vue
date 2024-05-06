@@ -55,7 +55,7 @@ export default {
 <template>
   <div class="row details">
     <div class="col-6">
-      <img :src="book.pic" :alt="book.name" />
+      <img :src="book.pic" :alt="book.name" class="book-image" />
       <p><span>Descripción: </span>{{ book.description }}</p>
       <p><span>Fecha publicación: </span>{{ book.publication }}</p>
     </div>
@@ -75,6 +75,10 @@ export default {
             aria-valuemax="100"
           ></div>
         </div>
+        <form>
+          <input type="number"  v-model="this.book_status.pages" />.../{{ this.book.pages }} <br>
+          <button class="btn btn-light">Actualizar</button>
+        </form>
       </div>
     </div>
   </div>
@@ -88,6 +92,12 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   max-width: -webkit-fill-available;
   max-height: -webkit-fill-available;
+}
+
+input{
+  border: 0;
+    background-color: #f2f2f2;
+    width: 15%;
 }
 
 .details h5 {
@@ -127,9 +137,16 @@ span {
   border: none;
 }
 
-img {
-  max-width: -webkit-fill-available;
-  max-height: -webkit-fill-available;
+.book-image-container {
+  width: 200px; /* Ancho del contenedor de la imagen */
+  height: 300px; /* Alto del contenedor de la imagen */
+  overflow: hidden; /* Oculta cualquier parte de la imagen que se desborde */
+}
+
+.book-image {
+  width: 200px; /* Haz que la imagen ocupe todo el ancho del contenedor */
+  height: 300px; /* Haz que la imagen ocupe todo el alto del contenedor */
+  object-fit: cover; /* Escala la imagen para que cubra todo el contenedor */
 }
 
 .rating {
@@ -156,10 +173,6 @@ textarea {
   height: 100px;
   width: -webkit-fill-available;
   resize: none;
-}
-
-form {
-  margin-top: 20%;
 }
 
 .comments {
@@ -189,7 +202,7 @@ form {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='25' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
-.progreso{
+.progreso {
   margin: 35px;
 }
 </style>
