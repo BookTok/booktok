@@ -28,6 +28,9 @@ export default {
     },
     index(){
       this.$router.push("/")
+    },
+    booksByType(tipo){
+      this.$router.push("/books-type/" + tipo)
     }
   }
 }
@@ -67,12 +70,12 @@ export default {
                   Libros
                 </a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                  <a class="dropdown-item" href="#">Ficción</a>
-                  <a class="dropdown-item" href="#">No Ficción</a>
-                  <a class="dropdown-item" href="#">Poesía</a>
-                  <a class="dropdown-item" href="#">Teatro</a>
-                  <a class="dropdown-item" href="#">Infantil</a>
-                  <a class="dropdown-item" href="#">Otros</a>
+                  <a class="dropdown-item" @click="booksByType('FIC')">Ficción</a>
+                  <a class="dropdown-item" @click="booksByType('NO_FIC')">No Ficción</a>
+                  <a class="dropdown-item" @click="booksByType('POE')">Poesía</a>
+                  <a class="dropdown-item" @click="booksByType('TEA')">Teatro</a>
+                  <a class="dropdown-item" @click="booksByType('INF')">Infantil</a>
+                  <a class="dropdown-item" @click="booksByType('OTROS')">Otros</a>
                 </div>
               </div>
               <div class="text-start">

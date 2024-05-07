@@ -1,8 +1,15 @@
 <script>
 import { useStore } from '@/stores/store';
 import { mapState, mapActions } from 'pinia';
+import axios from 'axios'
+const SERVER = import.meta.env.VITE_URL_API
 
 export default {
+    data(){
+        return{
+            rating: 0
+        }
+    },
     props: {
         libro: Object,
     },
@@ -11,6 +18,15 @@ export default {
             user: 'user'
         })
     },
+    async mounted() {
+    try {
+      const response = await axios.get(SERVER + '/averange/' + this.libro.id)
+      this.rating = response.data.total
+      console.log(this.rating)
+    } catch (error) {
+      this.addMsgArray('danger', 'No se puede conetar con el servidor')
+    }
+  },
     methods:{
         ...mapActions(useStore, ['addMsgArray']),
         showDetails(id){
@@ -24,7 +40,7 @@ export default {
         <img :src='libro.pic' :alt="libro.name">
         <h5>{{ libro.name }}</h5>
         <div class="rating">
-            <span v-for="n in 5" :key="n" :class="{ filled: n <= libro.rating_average }">★</span>
+            <span v-for="n in 5" :key="n" :class="{ filled: n <= libro.rating_average ? libro.rating_average : rating }">★</span>
         </div>
         <p class="description">Descripción: {{ libro.description }}</p>
         <button class="details btn" @click="showDetails(libro.id)">Detalles</button>
