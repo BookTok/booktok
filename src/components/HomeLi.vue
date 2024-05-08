@@ -40,8 +40,8 @@ export default {
         <img :src='libro.pic' :alt="libro.name">
         <h5>{{ libro.name }}</h5>
         <div class="rating">
-            <span v-for="n in 5" :key="n" :class="{ filled: n <= libro.rating_average ? libro.rating_average : rating }">★</span>
-        </div>
+            <span v-for="n in 5" :key="n" :class="{ filled: n <= (libro.rating_average || rating) }">★</span>
+        </div> 
         <p class="description">Descripción: {{ libro.description }}</p>
         <button class="details btn" @click="showDetails(libro.id)">Detalles</button>
     </div>    

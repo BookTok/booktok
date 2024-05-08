@@ -12,7 +12,8 @@ export default {
           data: [],
           prev: []
         }
-      ]
+      ],
+      titulo: ''
     }
   },
   props:{
@@ -34,6 +35,19 @@ export default {
   },
   async mounted() {
     await this.fetchBooksByType(this.tipo)
+    if (this.tipo == 'FIC') {
+      this.titulo = 'Ficción'
+    } else if (this.tipo == 'NO_FIC') {
+      this.titulo = 'No Ficción'
+    }else if (this.tipo == 'POE') {
+      this.titulo = 'Poesía'
+    }else if (this.tipo == 'INF') {
+      this.titulo = 'Infantil'
+    }else if (this.tipo == 'TEA') {
+      this.titulo = 'Teatro'
+    }else if (this.tipo == 'OTROS') {
+      this.titulo = 'Otros'
+    }
   },
   methods: {
     async fetchBooksByType(tipo) {
@@ -50,6 +64,7 @@ export default {
 
 <template>
   <div class="row container">
+    <h3>{{ this.titulo }}</h3>
     <home-li v-for="libro in libros" :libro="libro" :key="libro.id"></home-li>
   </div>
 </template>
