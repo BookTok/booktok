@@ -56,4 +56,37 @@ export default class APIService {
     getBookReviewUser(id_user, id_book){
         return this.apiClient.get('/user-review/' + id_user + '/' + id_book)
     }
+    searchBook(item){
+        return this.apiClient.get('/books-search/', item)
+    }
+    follow(follow){
+        return this.apiClient.post('/follow/', follow)
+    }
+    unfollowPub(id_user, id_publisher){
+        return this.apiClient.delete('/unfollowPublisher/'+ id_user + '/' + id_publisher)
+    }
+    unfollowAut(id_user, id_author){
+        return this.apiClient.delete('/unfollowPublisher/'+ id_user + '/' + id_author)
+    }
+    folloFriend(follow){
+        return this.apiClient.post('/follow-friend/', follow)
+    }
+    unfollowFriend(id_user, id_friend){
+        return this.apiClient.delete('/delete-friend/'+ id_user + '/' + id_friend)
+    }
+    userList(lista){
+        return this.apiClient.post('/user-list/', lista)
+    }
+    updateList(lista, id_user, id_lista){
+        return this.apiClient.post('/user-list-update/' + id_user + '/' + id_lista, lista)
+    }
+    deleteList(id_lista){
+        return this.apiClient.delete('/user-list-delete/'+ id_lista )
+    }
+    bookList(lista){
+        return this.apiClient.post('/book-list-post/', lista)
+    }
+    getFollow(id_user){
+        return this.apiClient.get('/followers/'+id_user)
+    }
 }
