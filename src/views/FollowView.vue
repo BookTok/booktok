@@ -39,7 +39,7 @@ export default {
 </script>
 <template>
    <div class="row">
-    <follow-li></follow-li>
+    <follow-li v-for="follow in follows" :key="follow"></follow-li>
    </div>
 </template>
 
