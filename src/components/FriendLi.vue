@@ -14,15 +14,10 @@ export default {
 }
 </script>
 <template>
-   <div v-if="follow.author" class="col-12 lists">
+   <div v-if="follow.friend" class="col-12 lists">
     <h3>Autores:</h3>
-    <img class="icon" :src="follow.author.user.pic" :alt="follow.author.name" />
-    <p>{{ follow.author.name }}</p>
-   </div>
-   <div v-if="follow && follow.publisher" class="col-12 lists">
-    <h3>Editoriales</h3>
-    <img class="icon" :src="follow.publisher.user.pic" :alt="follow.publisher.name" />
-    <p>{{ follow.publisher.name }}</p>
+    <img class="icon" :src="follow.friend.pic" :alt="follow.friend.name" />
+    <p>{{ follow.friend.name }}</p>
    </div>
 </template>
 

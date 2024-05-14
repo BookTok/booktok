@@ -76,6 +76,12 @@ export default {
     },
     viewList(listName) {
       this.$router.push('/book-list/' + listName)
+    },
+    followView() {
+      this.$router.push('/follow')
+    },
+    friendView(){
+      this.$router.push('/friends')
     }
   }
 }
@@ -95,10 +101,12 @@ export default {
           <p><strong>Email:</strong> {{ this.usuario.email }}</p>
         </div>
         <div class="col-4 text-center">
-          <button class="btn mt-2">
+          <button @click="friendView" class="btn mt-2">
             <span class="material-symbols-outlined"> diversity_4 </span> Amigos
           </button>
-          <button class="btn mt-2"><span class="material-symbols-outlined"> group </span>Seguidos</button>
+          <button @click="followView" class="btn mt-2">
+            <span class="material-symbols-outlined"> group </span>Seguidos
+          </button>
         </div>
         <div class="col-4 text-end">
           <button class="btn btn-light mt-2" @click="edit">Editar Perfil</button>

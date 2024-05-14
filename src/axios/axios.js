@@ -89,4 +89,7 @@ export default class APIService {
     getFollow(id_user){
         return this.apiClient.get('/followers/'+id_user)
     }
+    getFriend(id_user){
+        return this.apiClient.get('/friends/'+id_user)
+    }
 }

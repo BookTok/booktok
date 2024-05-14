@@ -2,7 +2,7 @@
 import { useStore } from '@/stores/store';
 import { mapState } from 'pinia';
 import APIService from '../axios/axios.js'
-import FollowLi from '../components/FollowLi.vue'
+import FriendLi from '../components/FriendLi.vue'
 
 export default {
     data() {
@@ -25,7 +25,7 @@ export default {
       if (this.user.rol === 'REG') {
         const response = await apiService.getUserEmail(this.user.email)
         this.usuario = response.data
-        const follow = await apiService.getFollow(this.usuario.id)
+        const follow = await apiService.getFriend(this.usuario.id)
         this.follows = follow.data.data
       }
     } catch (error) {
@@ -33,7 +33,7 @@ export default {
     }
   },
   components:{
-    FollowLi
+    FriendLi
   },
   methods:{
     back(){
@@ -43,22 +43,14 @@ export default {
 }
 </script>
 <template>
-  <span @click="back" class="material-symbols-outlined">
+    <span @click="back" class="material-symbols-outlined">
 arrow_back_ios
 </span>
    <div class="row">
-    <follow-li v-for="follow in follows" :follow="follow" :key="follow"></follow-li>
+    <friend-li v-for="follow in follows" :follow="follow" :key="follow"></friend-li>
    </div>
 </template>
 
 <style scoped>
-.material-symbols-outlined {
-  margin-top: 5px;
-  cursor: pointer; 
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
-}
+
 </style>
