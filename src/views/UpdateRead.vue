@@ -3,6 +3,8 @@ import APIService from '../axios/axios.js'
 import { useStore } from '@/stores/store'
 import { mapState, mapActions } from 'pinia'
 import axios from 'axios'
+import { Form, Field, ErrorMessage } from 'vee-validate'
+import * as yup from 'yup'
 const SERVER = import.meta.env.VITE_URL_API
 
 export default {
@@ -11,13 +13,24 @@ export default {
       book: {},
       book_status: {},
       usuario: [],
-      progressPercentage: '0%'
+      progressPercentage: '0%',
+      pages: ''
     }
+  },
+  components: {
+    Form,
+    ErrorMessage,
+    Field
   },
   props: {
     id: String
   },
   computed: {
+    validationSchema() {
+      return yup.object({
+        pages: yup.number().max(this.pages, `El número máximo de páginas es ${this.pages}`)
+      })
+    },
     ...mapState(useStore, {
       user: 'user'
     })
@@ -27,6 +40,7 @@ export default {
     try {
       const response = await axios.get(SERVER + '/books/' + this.id)
       this.book = response.data.data
+      this.pages = this.book.pages
       const responseComapny = await apiService.getUserEmail(this.user.email)
       this.usuario = responseComapny.data
       const read = await apiService.getBookByStatus(this.usuario.id, 'READING')
@@ -48,18 +62,28 @@ export default {
       } else {
         this.progressPercentage = '0%'
       }
+    },
+    async update() {
+      const apiService = new APIService(this.user.token)
+      try {
+        await apiService.updatePages(this.book.id, this.usuario.id, this.book_status)
+        // Después de actualizar las páginas, recalcular el progreso
+        this.calculateProgress()
+      } catch (error) {
+        this.addMsgArray('danger', 'No se puede conectar con el servidor')
+      }
     }
   }
 }
 </script>
 <template>
   <div class="row details">
-    <div class="col-6">
+    <div class="col-xl-6 col-xs-12">
       <img :src="book.pic" :alt="book.name" class="book-image" />
       <p><span>Descripción: </span>{{ book.description }}</p>
       <p><span>Fecha publicación: </span>{{ book.publication }}</p>
     </div>
-    <div class="col-6">
+    <div class="col-xl-6 col-xs-12">
       <h5>{{ book.name }}</h5>
       <p v-if="book.author"><span>Autor: </span>{{ book.author.name }}</p>
       <p v-if="book.publisher"><span>Editorial: </span>{{ book.publisher.name }}</p>
@@ -75,10 +99,14 @@ export default {
             aria-valuemax="100"
           ></div>
         </div>
-        <form>
-          <input type="number"  v-model="this.book_status.pages" />.../{{ this.book.pages }} <br>
-          <button class="btn btn-light">Actualizar</button>
-        </form>
+        <Form :initial-values="book_status" :validation-schema="validationSchema" @submit="update">
+          <Field type="number" v-model="this.book_status.pages" name="pages" id="pages" />.../{{
+            this.book.pages
+          }}
+          <ErrorMessage name="pages" class="error" />
+          <br />
+          <button class="btn btn-light" type="submit">Actualizar</button>
+        </Form>
       </div>
     </div>
   </div>
@@ -94,10 +122,10 @@ export default {
   max-height: -webkit-fill-available;
 }
 
-input{
+input {
   border: 0;
-    background-color: #f2f2f2;
-    width: 15%;
+  background-color: #f2f2f2;
+  width: 15%;
 }
 
 .details h5 {
@@ -204,5 +232,10 @@ textarea {
 
 .progreso {
   margin: 35px;
+}
+
+.error {
+  margin-top: 5px;
+  color: red;
 }
 </style>

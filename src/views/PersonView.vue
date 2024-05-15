@@ -2,6 +2,7 @@
 import { useStore } from '@/stores/store'
 import { mapState, mapActions } from 'pinia'
 import APIService from '../axios/axios.js'
+import { Form, Field } from 'vee-validate'
 
 export default {
   data() {
@@ -10,11 +11,17 @@ export default {
       listas: [],
       readBooks: [],
       readingBooks: [],
-      wishlistBooks: []
+      wishlistBooks: [],
+      friend: {},
+      yo: {}
     }
   },
   props: {
     id: String
+  },
+  components: {
+    Form,
+    Field
   },
   computed: {
     ...mapState(useStore, {
@@ -24,18 +31,24 @@ export default {
   async mounted() {
     const apiService = new APIService(this.user.token)
     try {
+      this.yo = await apiService.getUserEmail(this.user.email)
+      this.friend.id_user = this.yo.data.id
       const u = await apiService.getREG(this.id)
       if (u.data.data.rol === 'REG') {
-        this.usuario = u.data.data
         if (this.usuario.email === this.user.email) {
           this.$router.push('/profile')
+        } else {
+          this.usuario = u.data.data
+          this.friend.id_friend = this.usuario.id
         }
       } else if (u.data.data.rol === 'AUT') {
         const aut = await apiService.getAuthorUserId(Number(this.id))
         this.usuario = aut.data.data
+        this.friend.id_friend = this.usuario.user.id
       } else if (u.data.data.rol === 'EDI') {
         const pub = await apiService.getPublisheUserId(Number(this.id))
         this.usuario = pub.data.data
+        this.friend.id_friend = this.usuario.user.id
       }
     } catch (error) {
       this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
@@ -62,19 +75,8 @@ export default {
     async followFriend() {
       const apiService = new APIService(this.user.token)
       try {
-        const response = await apiService.followFriend(this.usuario.id)
-        if (response.status === 200) {
-          if (response.data.error === 'Ya sois amigos') {
-            this.addMsgArray('danger', 'Ya sois amigos')
-          } else {
-            this.addMsgArray('success', 'Sois amigos')
-          }
-        } else {
-          this.addMsgArray(
-            'danger',
-            'Error al intentar aplicar a la oferta por favor intentelo mas tarde'
-          )
-        }
+        await apiService.followFriend(this.friend)
+        this.addMsgArray('success', 'Sois amigos')
       } catch (error) {
         this.addMsgArray('danger', 'Ya sois amigos, no puedes volver a seguiros')
       }
@@ -93,12 +95,16 @@ export default {
           <p><strong>Email:</strong> {{ this.usuario.email }}</p>
         </div>
         <div class="col-4 text-center">
-          <button v-if="this.usuario.rol === 'REG'" class="btn mt-2" @click="followFriend">
-            <span class="material-symbols-outlined"> person_add </span>
-          </button>
-          <button v-else class="btn mt-2">
-            <span class="material-symbols-outlined"> add_box </span>
-          </button>
+          <Form @submit="followFriend()">
+            <Field type="number" v-model="friend.id_user" name="id_user" hidden />
+            <Field type="number" v-model="friend.id_friend" name="id_friend" hidden />
+            <button v-if="this.usuario.rol === 'REG'" class="btn mt-2" type="submit">
+              <span class="material-symbols-outlined"> person_add </span>
+            </button>
+            <button v-else class="btn mt-2">
+              <span class="material-symbols-outlined"> add_box </span>
+            </button>
+          </Form>
         </div>
       </div>
       <div v-if="this.usuario.rol === 'REG'" class="row lists">

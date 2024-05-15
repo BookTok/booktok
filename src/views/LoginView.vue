@@ -3,7 +3,6 @@ import { useStore } from '@/stores/store';
 import { mapActions } from 'pinia';
 import axios from 'axios'
 import * as yup from 'yup'
-import { setLocale } from 'yup'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 
 const SERVER = import.meta.env.VITE_URL_API

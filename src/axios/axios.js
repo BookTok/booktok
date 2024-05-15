@@ -99,6 +99,9 @@ export default class APIService {
         return this.apiClient.get('/publisher-user/' + id)
     }
     followFriend(friend){
-        return this.apiClient.post('/follow-friend/'+friend)
+        return this.apiClient.post('/follow-friend/', friend)
+    }
+    updatePages(id_book, id_user, book){
+        return this.apiClient.put('/book-status-update/' + id_book + '/' + id_user, book)
     }
 }

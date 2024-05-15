@@ -13,9 +13,8 @@ export default {
     },
 }
 </script>
-<template>
-   <div v-if="follow.friend" class="col-12 lists">
-    <h3>Autores:</h3>
+<template>  
+   <div v-if="follow.friend" class="col-2 lists">
     <img class="icon" :src="follow.friend.pic" :alt="follow.friend.name" />
     <p>{{ follow.friend.name }}</p>
    </div>
