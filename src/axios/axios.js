@@ -68,9 +68,6 @@ export default class APIService {
     unfollowAut(id_user, id_author){
         return this.apiClient.delete('/unfollowPublisher/'+ id_user + '/' + id_author)
     }
-    folloFriend(follow){
-        return this.apiClient.post('/follow-friend/', follow)
-    }
     unfollowFriend(id_user, id_friend){
         return this.apiClient.delete('/delete-friend/'+ id_user + '/' + id_friend)
     }
@@ -91,5 +88,17 @@ export default class APIService {
     }
     getFriend(id_user){
         return this.apiClient.get('/friends/'+id_user)
+    }
+    getREG(id){
+        return this.apiClient.get('/user/'+id)
+    }
+    getAuthorUserId(id) {
+        return this.apiClient.get('/author-user/' + id)
+    }
+    getPublisheUserId(id) {
+        return this.apiClient.get('/publisher-user/' + id)
+    }
+    followFriend(friend){
+        return this.apiClient.post('/follow-friend/'+friend)
     }
 }

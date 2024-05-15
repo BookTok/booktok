@@ -4,26 +4,16 @@ import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
 import { mapState } from 'pinia'
 import HomeLi from '@/components/HomeLi.vue'
+
 export default {
   data() {
     return {
-      libros: [
-        {
-          data: [],
-          prev: []
-        }
-      ],
+      libros: [],
       titulo: ''
     }
   },
   props:{
     tipo: String
-  },
-  watch: {
-    tipo: {
-      handler: 'fetchBooksByType',
-      immediate: true
-    }
   },
   components: {
     HomeLi
@@ -35,27 +25,48 @@ export default {
   },
   async mounted() {
     await this.fetchBooksByType(this.tipo)
-    if (this.tipo == 'FIC') {
-      this.titulo = 'Ficción'
-    } else if (this.tipo == 'NO_FIC') {
-      this.titulo = 'No Ficción'
-    }else if (this.tipo == 'POE') {
-      this.titulo = 'Poesía'
-    }else if (this.tipo == 'INF') {
-      this.titulo = 'Infantil'
-    }else if (this.tipo == 'TEA') {
-      this.titulo = 'Teatro'
-    }else if (this.tipo == 'OTROS') {
-      this.titulo = 'Otros'
+    this.updateTitulo(this.tipo)
+  },
+  watch: {
+    tipo: {
+      handler: function(newTipo) {
+        this.fetchBooksByType(newTipo)
+        this.updateTitulo(newTipo)
+      },
+      immediate: true
     }
   },
   methods: {
     async fetchBooksByType(tipo) {
       try {
-        const response = await axios.get(SERVER + '/books-genre/' + tipo)
+        const response = await axios.get(`${SERVER}/books-genre/${tipo}`)
         this.libros = response.data.data
       } catch (error) {
         console.error('Error al obtener los libros:', error)
+      }
+    },
+    updateTitulo(tipo) {
+      switch (tipo) {
+        case 'FIC':
+          this.titulo = 'Ficción'
+          break;
+        case 'NO_FIC':
+          this.titulo = 'No Ficción'
+          break;
+        case 'POE':
+          this.titulo = 'Poesía'
+          break;
+        case 'INF':
+          this.titulo = 'Infantil'
+          break;
+        case 'TEA':
+          this.titulo = 'Teatro'
+          break;
+        case 'OTROS':
+          this.titulo = 'Otros'
+          break;
+        default:
+          this.titulo = ''
       }
     }
   }
@@ -64,7 +75,7 @@ export default {
 
 <template>
   <div class="row container">
-    <h3>{{ this.titulo }}</h3>
+    <h3>{{ titulo }}</h3>
     <home-li v-for="libro in libros" :libro="libro" :key="libro.id"></home-li>
   </div>
 </template>

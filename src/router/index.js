@@ -10,6 +10,7 @@ import UpdateRead from '@/views/UpdateRead.vue'
 import BooksView from '@/views/BooksView.vue'
 import FollowView from '@/views/FollowView.vue'
 import FriendView from '@/views/FriendView.vue'
+import PersonView from '@/views/PersonView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -74,6 +75,13 @@ const router = createRouter({
       component: FriendView,
       meta: { requiresAuth: true }
     },
+    {
+      path: '/user/:id',
+      name: 'user',
+      props: true,
+      component: PersonView,
+      meta: { requiresAuth: true }
+    }
   ]
 })
 

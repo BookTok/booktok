@@ -64,7 +64,10 @@ export default {
       } catch (error) {
         this.addMsgArray('danger', 'No se pudo eliminar la oferta')
       }
-    }
+    },
+    getUser(id){
+            this.$router.push('/user/' + id)
+        }
     // async softDelete() {
     //   const apiService = new APIService(this.user.token)
     //   try {
@@ -109,8 +112,8 @@ export default {
     </div>
     <div class="col-4">
       <h5>{{ book.name }}</h5>
-      <p v-if="book.author"><span>Autor: </span>{{ book.author.name }}</p>
-      <p v-if="book.publisher"><span>Editorial: </span>{{ book.publisher.name }}</p>
+      <p class="point" v-if="book.author" @click="getUser(book.author.user.id)"><span>Autor: </span>{{ book.author.name }}</p>
+      <p class="point" v-if="book.publisher" @click="getUser(book.publisher.user.id)"><span>Editorial: </span>{{ book.publisher.name }}</p>
       <div v-if="this.user.rol == 'REG'">
         <form>
         <span>Valoración</span><br />
@@ -228,5 +231,9 @@ form {
 .comments {
   max-height: 80%; /* Altura máxima */
   overflow-x: auto; /* Scroll horizontal */
+}
+
+.point{
+  cursor: pointer;
 }
 </style>
