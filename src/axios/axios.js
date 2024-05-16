@@ -104,4 +104,16 @@ export default class APIService {
     updatePages(id_book, id_user, book){
         return this.apiClient.put('/book-status-update/' + id_book + '/' + id_user, book)
     }
+    createReview(review){
+        return this.apiClient.post('/review/', review)
+    }
+    updateReview(id, review){
+        return this.apiClient.put('/review-update/' + id, review)
+    }
+    areFriends(id_user, id_friend){
+        return this.apiClient.get('/are-friend/'+ id_user + '/' + id_friend)
+    }
+    deleteFriend(id_user, id_friend){
+        return this.apiClient.delete('/delete-friend/'+ id_user + '/' + id_friend)
+    }
 }

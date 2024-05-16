@@ -5,6 +5,7 @@ import { mapState, mapActions } from 'pinia'
 import axios from 'axios'
 import CommentsBook from './CommentsBook.vue'
 const SERVER = import.meta.env.VITE_URL_API
+import { Form, Field, ErrorMessage } from 'vee-validate'
 
 export default {
   data() {
@@ -15,7 +16,8 @@ export default {
       review: {
         review: '',
         rating: 0
-      }
+      },
+      usuario: {}
     }
   },
   props: {
@@ -27,9 +29,13 @@ export default {
     })
   },
   components: {
+    Form,
+    ErrorMessage,
+    Field,
     CommentsBook
   },
   async mounted() {
+    const apiService = new APIService(this.user.token)
     try {
       const response = await axios.get(SERVER + '/books/' + this.id)
       this.book = response.data.data
@@ -53,21 +59,60 @@ export default {
       this.addMsgArray('danger', 'No se puede conetar con el servidor')
     }
     console.log(this.reviews)
+
+    try {
+      if (this.user.rol === 'REG') {
+        const responseComapny = await apiService.getUserEmail(this.user.email)
+        this.usuario = responseComapny.data
+      }
+      const response = await apiService.getBookReviewUser(this.usuario.id, this.book.id)
+      this.review.id = response.data.data.id
+      this.review.rating = response.data.data.rating
+      this.review.review = response.data.data.review
+      this.review.id_user = response.data.data.id_user.id
+      this.review.id_book = response.data.data.book.id
+    } catch (error) {
+      console.log(error)
+    }
   },
   methods: {
     ...mapActions(useStore, ['addMsgArray']),
-    async makeReview(){
+    getUser(id) {
+      this.$router.push('/user/' + Number(id))
+    },
+    submitOrUpdate() {
       const apiService = new APIService(this.user.token)
-      try {
-        await apiService.softDelet(Number(this.offer.id))
-        this.$router.push('/')
-      } catch (error) {
-        this.addMsgArray('danger', 'No se pudo eliminar la oferta')
+      // Verificar si la valoración ya existe
+      if (this.review.id) {
+        // Si la valoración existe (tiene un ID asignado), actualizarla
+        this.update(apiService)
+      } else {
+        // Si la valoración no existe, crear una nueva
+        this.create(apiService)
       }
     },
-    getUser(id){
-            this.$router.push('/user/' + id)
-        }
+
+    async update(apiService) {
+      try {
+        // Actualizar la valoración existente
+        await apiService.updateReview(this.review.id, this.review)
+        // Manejar la lógica adicional después de la actualización, si es necesario
+      } catch (error) {
+        this.addMsgArray('danger', 'Error al actualizar la valoración')
+      }
+    },
+
+    async create(apiService) {
+      try {
+        // Crear una nueva valoración
+        this.review.id_user = this.usuario.id
+      this.review.id_book = this.book.id
+        await apiService.createReview(this.review)
+        // Manejar la lógica adicional después de la creación, si es necesario
+      } catch (error) {
+        this.addMsgArray('danger', 'Error al crear la valoración')
+      }
+    }
     // async softDelete() {
     //   const apiService = new APIService(this.user.token)
     //   try {
@@ -112,22 +157,33 @@ export default {
     </div>
     <div class="col-4">
       <h5>{{ book.name }}</h5>
-      <p class="point" v-if="book.author" @click="getUser(book.author.user.id)"><span>Autor: </span>{{ book.author.name }}</p>
-      <p class="point" v-if="book.publisher" @click="getUser(book.publisher.user.id)"><span>Editorial: </span>{{ book.publisher.name }}</p>
+      <p class="point" v-if="book.author" @click="getUser(book.author.user.id)">
+        <span>Autor: </span>{{ book.author.name }}
+      </p>
+      <p class="point" v-if="book.publisher" @click="getUser(book.publisher.user.id)">
+        <span>Editorial: </span>{{ book.publisher.name }}
+      </p>
       <div v-if="this.user.rol == 'REG'">
-        <form>
-        <span>Valoración</span><br />
-
-        <div class="user-rating">
-          <input type="number" v-model="review.id_book" hidden>
-          <input type="number" v-model="review.id_user" hidden>
-          <span v-for="n in 5" :key="n" @click="review.rating = n" :class="{ filled: n <= review.rating }"
-            >★</span
-          >
-          <textarea type="text" v-model="review.review" placeholder="Escribe tu comentario"></textarea>
-        </div>
-        <button class="btn btn-light">Enviar</button>
-      </form>
+        <Form :initial-values="review" @submit="submitOrUpdate">
+          <span>Valoración</span>
+          <div class="user-rating">
+            <Field type="number" v-model="review.id_book" name="id_book" hidden />
+            <Field type="number" v-model="review.id_user" name="id_user" hidden />
+            <span
+              v-for="n in 5"
+              :key="n"
+              @click="review.rating = n"
+              :class="{ filled: n <= review.rating }"
+              >★</span
+            >
+            <textarea
+              type="text"
+              v-model="review.review"
+              placeholder="Escribe tu comentario"
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-light">Enviar</button>
+        </Form>
       </div>
     </div>
     <div class="col-4">
@@ -233,7 +289,7 @@ form {
   overflow-x: auto; /* Scroll horizontal */
 }
 
-.point{
+.point {
   cursor: pointer;
 }
 </style>
