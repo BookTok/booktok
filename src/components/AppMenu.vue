@@ -31,6 +31,9 @@ export default {
     },
     booksByType(tipo){
       this.$router.push("/books-type/" + tipo)
+    },
+    search(){
+      this.$router.push("/search")
     }
   }
 }
@@ -79,7 +82,7 @@ export default {
                 </div>
               </div>
               <div class="text-start">
-                <a class="nav-link d-flex text-start" href="#"
+                <a class="nav-link d-flex text-start search" @click="search"
                   ><span class="material-symbols-outlined"> search </span>Buscar</a
                 >
               </div>
@@ -126,6 +129,9 @@ export default {
 img{
   height: 20%;
   width: 20%;
+  cursor: pointer;
+}
+.search{
   cursor: pointer;
 }
 </style>

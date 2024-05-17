@@ -113,7 +113,22 @@ export default class APIService {
     areFriends(id_user, id_friend){
         return this.apiClient.get('/are-friend/'+ id_user + '/' + id_friend)
     }
+    areFollow(id_user, id_author, id_publisher){
+        return this.apiClient.get('/are-follow/'+ id_user + '/' + id_author + '/' + id_publisher)
+    }
     deleteFriend(id_user, id_friend){
         return this.apiClient.delete('/delete-friend/'+ id_user + '/' + id_friend)
+    }
+    authorBook(id_user){
+        return this.apiClient.get('/books-author/'+ id_user )
+    }
+    publisherBook(id_user){
+        return this.apiClient.get('/books-publisher/'+ id_user )
+    }
+    followAuthPub(follow){
+        return this.apiClient.post('/follow/', follow)
+    }
+    search(){
+        return this.apiClient.get('/books-search/')
     }
 }

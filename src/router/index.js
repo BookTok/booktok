@@ -11,6 +11,7 @@ import BooksView from '@/views/BooksView.vue'
 import FollowView from '@/views/FollowView.vue'
 import FriendView from '@/views/FriendView.vue'
 import PersonView from '@/views/PersonView.vue'
+import SearchView from '@/views/SearchView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -81,6 +82,11 @@ const router = createRouter({
       props: true,
       component: PersonView,
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: SearchView,
     }
   ]
 })

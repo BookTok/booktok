@@ -15,7 +15,12 @@ export default {
       wishlistBooks: [],
       friend: {},
       yo: {},
-      libors: [],
+      libros: [
+        {
+          data: [],
+          prev: []
+        }
+      ],
       bool: ''
     }
   },
@@ -24,7 +29,8 @@ export default {
   },
   components: {
     Form,
-    Field
+    Field,
+    HomeLi
   },
   computed: {
     ...mapState(useStore, {
@@ -47,11 +53,13 @@ export default {
       } else if (u.data.data.rol === 'AUT') {
         const aut = await apiService.getAuthorUserId(this.id)
         this.usuario = aut.data.data
-        this.friend.id_friend = this.usuario.user.id
+        this.friend.id_author = this.usuario.id
+        this.friend.id_publisher = 0
       } else if (u.data.data.rol === 'EDI') {
         const pub = await apiService.getPublisheUserId(this.id)
         this.usuario = pub.data.data
-        this.friend.id_friend = this.usuario.user.id
+        this.friend.id_author = 0
+        this.friend.id_publisher = this.usuario.id
       }
     } catch (error) {
       this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
@@ -65,6 +73,12 @@ export default {
         this.readingBooks = reading.data
         const wish = await apiService.getBookByStatus(this.usuario.id, 'WISH')
         this.wishlistBooks = wish.data
+      } else if (this.usuario.rol === 'AUT') {
+        const authBook = await apiService.authorBook(this.usuario.id)
+        this.libros = authBook.data
+      } else if (this.usuario.rol === 'EDI') {
+        const pubBook = await apiService.publisherBook(this.usuario.id)
+        this.libros = pubBook.data
       }
     } catch (error) {
       this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
@@ -73,6 +87,13 @@ export default {
       if (this.usuario.rol === 'REG') {
         const are = await apiService.areFriends(this.friend.id_user, this.friend.id_friend)
         this.bool = are.data.bool
+      } else if (this.usuario.rol === 'AUT' || this.usuario.rol === 'EDI') {
+        const areF = await apiService.areFollow(
+          this.friend.id_user,
+          this.friend.id_author,
+          this.friend.id_publisher
+        )
+        this.bool = areF.data.bool
       }
     } catch (error) {
       this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
@@ -86,16 +107,38 @@ export default {
     async followFriend() {
       const apiService = new APIService(this.user.token)
       try {
-        if (this.book === '0') {
+        if (this.bool === '0') {
           await apiService.followFriend(this.friend)
-        this.addMsgArray('success', 'Sois amigos')
+          this.bool = '1'
+          this.addMsgArray('success', 'Sois amigos')
         } else {
           await apiService.deleteFriend(this.friend.id_user, this.friend.id_friend)
-        this.addMsgArray('info', 'Dejasteis de ser amigos')
+          this.bool = '0'
+          this.addMsgArray('info', 'Dejasteis de ser amigos')
         }
-        
       } catch (error) {
         this.addMsgArray('danger', 'Ya sois amigos, no puedes volver a seguiros')
+      }
+    },
+    async follow() {
+      const apiService = new APIService(this.user.token)
+      try {
+        if (this.bool === '0') {
+          await apiService.followAuthPub(this.friend)
+          this.bool = '1'
+          this.addMsgArray('success', 'Seguiste a este usuario')
+        } else {
+          if (this.usuario.rol == 'AUT') {
+            await apiService.unfollowAut(this.friend.id_user, this.friend.id_author)
+          this.bool = '0'
+          } else {
+            await apiService.unfollowPub(this.friend.id_user, this.friend.id_publisher)
+          this.bool = '0'
+          }
+          this.addMsgArray('info', 'Dejaste de seguirlo')
+        } 
+      } catch (error) {
+        this.addMsgArray('danger', 'Ya lo sigues')
       }
     }
   }
@@ -112,25 +155,23 @@ export default {
           <p><strong>Email:</strong> {{ this.usuario.email }}</p>
         </div>
         <div class="col-4 text-center">
-          <Form @submit="followFriend()">
+          <Form v-if="this.usuario.rol === 'REG'" @submit="followFriend()">
             <Field type="number" v-model="friend.id_user" name="id_user" hidden />
             <Field type="number" v-model="friend.id_friend" name="id_friend" hidden />
-            <button
-              v-if="this.usuario.rol === 'REG' && this.bool === '0'"
-              class="btn mt-2"
-              type="submit"
-            >
-              <span class="material-symbols-outlined"> person_add </span>
+            <button class="btn mt-2" type="submit">
+              <span class="material-symbols-outlined">
+                {{ bool === '0' ? 'person_add' : 'person_cancel' }}
+              </span>
             </button>
-            <button
-              v-if="this.usuario.rol === 'REG' && this.bool === '1'"
-              class="btn mt-2"
-              type="submit"
-            >
-              <span class="material-symbols-outlined"> person_cancel </span>
-            </button>
-            <button v-if="this.usuario.rol === 'AUT' || this.usuario.rol === 'EDI'" class="btn mt-2">
-              <span class="material-symbols-outlined"> add_box </span>
+          </Form>
+          <Form v-if="this.usuario.rol === 'AUT' || this.usuario.rol === 'EDI'" @submit="follow()">
+            <Field type="number" v-model="friend.id_user" name="id_user" hidden />
+            <Field type="number" v-model="friend.id_publisher" name="id_publisher" hidden />
+            <Field type="number" v-model="friend.id_author" name="id_author" hidden />
+            <button class="btn mt-2">
+              <span class="material-symbols-outlined">
+                {{ bool === '0' ? 'add_box' : 'disabled_by_default' }}
+              </span>
             </button>
           </Form>
         </div>
@@ -183,8 +224,9 @@ export default {
       <div v-if="this.usuario.rol === 'REG'" class="row lists">
         <h4>{{ this.usuario.name }} Listas</h4>
       </div>
-      <div v-else class="row lists">
+      <div v-else class="row">
         <h4>{{ this.usuario.name }} Libros</h4>
+        <home-li v-for="libro in this.libros.data" :libro="libro" :key="libro.id"></home-li>
       </div>
     </div>
   </div>
