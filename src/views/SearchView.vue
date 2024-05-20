@@ -3,14 +3,14 @@ import { useStore } from '@/stores/store.js'
 import axios from 'axios'
 const SERVER = import.meta.env.VITE_URL_API
 import { mapState } from 'pinia'
-import { Form, Field, useForm } from 'vee-validate'
+import { Form, Field } from 'vee-validate'
 import HomeLi from '@/components/HomeLi.vue'
 
 export default {
   data() {
     return {
       libros: [],
-      query: {}
+      query: ''
     }
   },
   components: {
@@ -25,10 +25,16 @@ export default {
   },
   methods: {
     async buscar() {
-      await axios
-      .get(SERVER + '/books-search/', this.query)
-      .then((response) => (this.libros = response.data))
-      .catch()
+      try {
+        const response = await axios.get(SERVER + '/books-search/', {
+          params: {
+            query: this.query
+          }
+        })
+        this.libros = response.data.data
+      } catch (error) {
+        console.error('Error al buscar libros:', error)
+      }
     }
   }
 }
@@ -38,16 +44,17 @@ export default {
 <template>
   <div class="row container">
     <div class="col-12">
-      <Form @submit="buscar" >
-        <Field type="text" v-model="query.query" name="query" />
-        <button type="submit" @click="submitForm" class="btn btn-light">
+      <Form @submit="buscar">
+        <Field type="text" v-model="query" name="query" />
+        <button type="submit" class="btn btn-light">
           <span class="material-symbols-outlined"> search </span>
         </button>
       </Form>
     </div>
-    <div class="col-12" v-if="libros.length > 0">
+    <div class="col-12 mt-5" v-if="libros.length > 0">
+      <h4 v-if="query !== '' && libros !== null">Busquedas para {{ query }}</h4>
       <div class="row">
-        <home-li v-for="libro in libros.data" :libro="libro" :key="libro.id"></home-li>
+        <home-li v-for="libro in libros" :libro="libro" :key="libro.id"></home-li>
       </div>
     </div>
   </div>

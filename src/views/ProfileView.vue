@@ -2,6 +2,7 @@
 import { useStore } from '@/stores/store'
 import { mapState, mapActions } from 'pinia'
 import APIService from '../axios/axios.js'
+import foto from '../assets/default.jpg'
 
 export default {
   data() {
@@ -10,7 +11,8 @@ export default {
       listas: [],
       readBooks: [],
       readingBooks: [],
-      wishlistBooks: []
+      wishlistBooks: [],
+      defaultPic: foto // Añadido defaultPic aquí
     }
   },
   computed: {
@@ -82,6 +84,9 @@ export default {
     },
     friendView(){
       this.$router.push('/friends')
+    },
+    updateProfile(){
+      this.$router.push()
     }
   }
 }
@@ -95,17 +100,17 @@ export default {
     <div class="card-body">
       <div class="row">
         <div class="col-4">
-          <img class="icon" :src="this.usuario.pic" :alt="this.usuario.name" />
-          <p><strong>Nombre:</strong> {{ this.usuario.name }}</p>
-          <p><strong>Apellidos:</strong> {{ this.usuario.surname }}</p>
-          <p><strong>Email:</strong> {{ this.usuario.email }}</p>
+          <img class="icon" :src="usuario.pic || defaultPic" :alt="usuario.name" />
+          <p><strong>Nombre:</strong> {{ usuario.name }}</p>
+          <p><strong>Apellidos:</strong> {{ usuario.surname }}</p>
+          <p><strong>Email:</strong> {{ usuario.email }}</p>
         </div>
         <div class="col-4 text-center">
           <button @click="friendView" class="btn mt-2">
             <span class="material-symbols-outlined"> diversity_4 </span> Amigos
           </button>
           <button @click="followView" class="btn mt-2">
-            <span class="material-symbols-outlined"> group </span>Seguidos
+            <span class="material-symbols-outlined"> group </span> Seguidos
           </button>
         </div>
         <div class="col-4 text-end">
@@ -118,7 +123,6 @@ export default {
         <div class="col-4">
           <h5>LEIDOS</h5>
           <div class="folder" @click="viewList('READ')">
-            <!-- <img src="/carpeta-leidos.png" alt="Leídos" /> -->
             <div class="thumbnails" v-if="readBooks.data">
               <img
                 class="book-pic"
@@ -132,7 +136,6 @@ export default {
         <div class="col-4">
           <h5>LEYENDO</h5>
           <div class="folder" @click="viewList('READING')">
-            <!-- <img src="/carpeta-leyendo.png" alt="Leyendo" /> -->
             <div class="thumbnails" v-if="readingBooks.data">
               <img
                 class="book-pic"
@@ -146,7 +149,6 @@ export default {
         <div class="col-4">
           <h5>WISHLIST</h5>
           <div class="folder" @click="viewList('WISH')">
-            <!-- <img src="/carpeta-wishlist.png" alt="Wishlist" /> -->
             <div class="thumbnails" v-if="wishlistBooks.data">
               <img
                 class="book-pic"

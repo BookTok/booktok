@@ -128,7 +128,16 @@ export default class APIService {
     followAuthPub(follow){
         return this.apiClient.post('/follow/', follow)
     }
-    search(){
-        return this.apiClient.get('/books-search/')
+    search(query){
+        return this.apiClient.get('/books-search/?query='+query)
+    }
+    updateProfile(id, usuario){
+        return this.apiClient.put('/user-update/' + id, usuario)
+    }
+    deleteUser(id_user){
+        return this.apiClient.delete('/user-delete/'+ id_user)
+    }
+    updateStateBook(id_book, id_user, status){
+        return this.apiClient.put('/book-status-update-state/' + id_book + '/' + id_user, status)
     }
 }
