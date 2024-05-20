@@ -53,21 +53,17 @@ export default {
   methods: {
     ...mapActions(useStore, ['cleanUser', 'addMsgArray']),
     edit() {
-      if (this.user.rol === 'COMP') {
-        this.$router.push('/company-mod/' + Number(this.usuario.id))
-      } else if (this.user.rol === 'STU') {
-        this.$router.push('/student-mod/' + Number(this.usuario.id))
-      }
+      if (this.user.rol === 'REG') {
+        this.$router.push('/user-update/' + Number(this.usuario.id))
+      } 
     },
     async eliminar() {
       const apiService = new APIService(this.user.token)
       try {
         if (confirm('¿Seguro que quieres eliminar tu perfil?')) {
-          if (this.user.rol === 'COMP') {
-            await apiService.deleteCompany(this.usuario.CIF)
-          } else if (this.user.rol === 'STU') {
-            await apiService.deleteStudent(this.usuario.id)
-          }
+          if (this.user.rol === 'REG') {
+            await apiService.deleteUser(this.usuario.id)
+          } 
           this.$router.push('/')
           localStorage.clear()
           this.cleanUser()
@@ -84,9 +80,6 @@ export default {
     },
     friendView(){
       this.$router.push('/friends')
-    },
-    updateProfile(){
-      this.$router.push()
     }
   }
 }
