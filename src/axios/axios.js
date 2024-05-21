@@ -138,6 +138,6 @@ export default class APIService {
         return this.apiClient.delete('/user-delete/'+ id_user)
     }
     updateStateBook(id_book, id_user, status){
-        return this.apiClient.put('/book-status-update-state/' + id_book + '/' + id_user, status)
+        return this.apiClient.post('/book-status-update-state/' + id_book + '/' + id_user + '?status=' + status)
     }
 }

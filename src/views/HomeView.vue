@@ -36,7 +36,7 @@ export default {
 <template>
   <div class="row container">
     <home-li v-for="libro in this.libros.data" :libro="libro" :key="libro.id"></home-li>
-    <div v-if="this.user.rol == 'REG'" class="col-lg-4">
+    <div v-if="this.user && Object.values(this.user).length !== 0" class="col-lg-4">
         hola
     </div>
   </div>

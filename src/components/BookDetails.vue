@@ -10,14 +10,23 @@ import { Form, Field, ErrorMessage } from 'vee-validate'
 export default {
   data() {
     return {
+      showModal: false,
       book: {},
       rating: '',
       reviews: [],
       review: {
         review: '',
-        rating: 0
+        rating: 0,
+        id_user: '',
+        id_book: ''
       },
-      usuario: {}
+      usuario: {},
+      book_status: {
+        id_user: '',
+        id_book: '',
+        status: ''
+      },
+      statuses: ['READ', 'READING', 'WISH']
     }
   },
   props: {
@@ -64,13 +73,13 @@ export default {
       if (this.user.rol === 'REG') {
         const responseComapny = await apiService.getUserEmail(this.user.email)
         this.usuario = responseComapny.data
-      }
-      const response = await apiService.getBookReviewUser(this.usuario.id, this.book.id)
+        const response = await apiService.getBookReviewUser(this.usuario.id, this.book.id)
       this.review.id = response.data.data.id
       this.review.rating = response.data.data.rating
       this.review.review = response.data.data.review
       this.review.id_user = response.data.data.id_user.id
       this.review.id_book = response.data.data.book.id
+      }
     } catch (error) {
       console.log(error)
     }
@@ -78,59 +87,48 @@ export default {
   methods: {
     ...mapActions(useStore, ['addMsgArray']),
     getUser(id) {
-      this.$router.push('/user/' + Number(id))
+      this.$router.push(`/user/${Number(id)}`)
     },
     submitOrUpdate() {
       const apiService = new APIService(this.user.token)
-      // Verificar si la valoración ya existe
       if (this.review.id) {
-        // Si la valoración existe (tiene un ID asignado), actualizarla
         this.update(apiService)
       } else {
-        // Si la valoración no existe, crear una nueva
         this.create(apiService)
       }
     },
-
     async update(apiService) {
       try {
-        // Actualizar la valoración existente
         await apiService.updateReview(this.review.id, this.review)
-        // Manejar la lógica adicional después de la actualización, si es necesario
       } catch (error) {
         this.addMsgArray('danger', 'Error al actualizar la valoración')
       }
     },
-
     async create(apiService) {
       try {
-        // Crear una nueva valoración
         this.review.id_user = this.usuario.id
-      this.review.id_book = this.book.id
+        this.review.id_book = this.book.id
         await apiService.createReview(this.review)
-        // Manejar la lógica adicional después de la creación, si es necesario
       } catch (error) {
         this.addMsgArray('danger', 'Error al crear la valoración')
       }
+    },
+    selectStatus(status) {
+      this.book_status.status = status
+      this.book_status.id_user = this.usuario.id
+      this.book_status.id_book = this.book.id
+      this.showModal = false
+      this.handleSubmit()
+    },
+    async handleSubmit() {
+      const apiService = new APIService(this.user.token)
+      try {
+        await apiService.updateStateBook(this.book_status.id_book, this.book_status.id_user,this.book_status.status,)
+        this.addMsgArray('success', 'Estado del libro actualizado')
+      } catch (error) {
+        this.addMsgArray('danger', 'Error al enviar el estado del libro')
+      }
     }
-    // async softDelete() {
-    //   const apiService = new APIService(this.user.token)
-    //   try {
-    //     await apiService.softDelet(Number(this.offer.id))
-    //     this.$router.push('/')
-    //   } catch (error) {
-    //     this.addMsgArray('danger', 'No se pudo eliminar la oferta')
-    //   }
-    // },
-    // async deshablitar() {
-    //   const apiService = new APIService(this.user.token)
-    //   try {
-    //     await apiService.deshabiliti(Number(this.offer.id))
-    //     this.$router.push('/')
-    //   } catch (error) {
-    //     this.addMsgArray('danger', 'No se pudo deshabilitar la oferta')
-    //   }
-    // }
   }
 }
 </script>
@@ -140,20 +138,6 @@ export default {
       <img :src="book.pic" :alt="book.name" />
       <p><span>Descripción: </span>{{ book.description }}</p>
       <p><span>Fecha publicación: </span>{{ book.publication }}</p>
-      <!-- <button
-        v-if="this.user.rol == 'EDI' || this.user.rol == 'AUT'"
-        class="eliminar btn btn-success"
-        @click="softDelete"
-      >
-        Eliminar
-      </button>
-      <button
-        v-if="this.user.rol == 'EDI' || this.user.rol == 'AUT'"
-        class="deshablitar btn btn-success"
-        @click="deshablitar"
-      >
-        Deshabilitar
-      </button> -->
     </div>
     <div class="col-4">
       <h5>{{ book.name }}</h5>
@@ -164,11 +148,47 @@ export default {
         <span>Editorial: </span>{{ book.publisher.name }}
       </p>
       <div v-if="this.user.rol == 'REG'">
-        <Form :initial-values="review" @submit="submitOrUpdate">
+        <!-- Formulario para el estado del libro -->
+        <form @submit.prevent="handleSubmit">
+          <input type="number" v-model="book_status.id_book" name="id_book" hidden />
+          <input type="number" v-model="book_status.id_user" name="id_user" hidden />
+          <input type="text" v-model="book_status.status" name="status" hidden />
+          <button type="button" @click="showModal = true" class="btn btn-light">
+            <span class="material-symbols-outlined"> bookmarks </span>
+          </button>
+        </form>
+        
+        <!-- Modal para seleccionar estado -->
+        <div v-if="showModal" class="modal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Estado del Libro</h5>
+                <button type="button" class="btn-close" @click="showModal = false">X</button>
+              </div>
+              <div class="modal-body">
+                <div class="list-group">
+                  <button
+                    type="button"
+                    class="list-group-item list-group-item-action"
+                    v-for="status in statuses"
+                    :key="status"
+                    @click="selectStatus(status)"
+                  >
+                    {{ status }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario para la valoración -->
+        <form @submit.prevent="submitOrUpdate">
           <span>Valoración</span>
           <div class="user-rating">
-            <Field type="number" v-model="review.id_book" name="id_book" hidden />
-            <Field type="number" v-model="review.id_user" name="id_user" hidden />
+            <input type="number" v-model="review.id_book" name="id_book" hidden />
+            <input type="number" v-model="review.id_user" name="id_user" hidden />
             <span
               v-for="n in 5"
               :key="n"
@@ -183,7 +203,7 @@ export default {
             ></textarea>
           </div>
           <button type="submit" class="btn btn-light">Enviar</button>
-        </Form>
+        </form>
       </div>
     </div>
     <div class="col-4">
@@ -198,10 +218,10 @@ export default {
           :key="comments"
         ></comments-book>
       </div>
-      <!-- hacer nueva clase componente -->
     </div>
   </div>
 </template>
+
 <style scoped>
 .details {
   background-color: #f2f2f2;
@@ -291,5 +311,23 @@ form {
 
 .point {
   cursor: pointer;
+}
+
+.modal {
+  display: block; /* Mostrar el modal */
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+}
+
+.modal-dialog {
+  margin: 100px auto; /* Centrar el modal */
+}
+
+.btn-close {
+  background: none;
+  border: none;
+}
+
+.filled {
+  color: gold;
 }
 </style>

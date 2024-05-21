@@ -6,13 +6,20 @@ import APIService from '../axios/axios.js'
 export default {
   data() {
     return {
+      showModal: false,
       books: [], // Inicializamos books como un array vacío
       usuario: [],
       author: '',
       publisher: '',
       reviews: [],
       rating: '',
-      comment: ''
+      comment: '',
+      book_status: {
+        id_user: '',
+        id_book: '',
+        status: ''
+      },
+      statuses: ['READ', 'READING', 'WISH']
     }
   },
   props: {
@@ -35,12 +42,13 @@ export default {
     } catch (error) {
       this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
     }
-
+    this.book_status.id_user = this.usuario.id
     for (const book of this.books) {
       const aut = await apiService.getAuthor(book.id_book.id_author)
       book.author = aut.data.data.user.name
       const pub = await apiService.getPublisher(book.id_book.id_publisher)
       book.publisher = pub.data.data.user.name
+      this.book_status.id_book = book.id_book.id
     }
 
     if (this.status == 'READ') {
@@ -55,6 +63,29 @@ export default {
     ...mapActions(useStore, ['cleanUser', 'addMsgArray']),
     updateRead(id) {
       this.$router.push('/update-read/book/' + Number(id))
+    },
+    openModal(bookId) {
+      this.book_status.id_book = bookId
+      this.showModal = true
+    },
+    selectStatus(status) {
+      this.book_status.status = status
+      this.showModal = false
+      this.handleSubmit()
+    },
+    async handleSubmit() {
+      const apiService = new APIService(this.user.token)
+      try {
+        await apiService.updateStateBook(
+          this.book_status.id_book,
+          this.book_status.id_user,
+          this.book_status.status
+        )
+        this.addMsgArray('success', 'Estado del libro actualizado')
+        this.$router.push('/profile')
+      } catch (error) {
+        this.addMsgArray('danger', 'Error al enviar el estado del libro')
+      }
     }
   }
 }
@@ -87,6 +118,42 @@ export default {
                 placeholder="Escribe tu comentario"
               ></textarea>
             </div>
+            <div class="status">
+              <form @submit.prevent="handleSubmit">
+                <input type="number" v-model="book_status.id_book" name="id_book" hidden />
+                <input type="number" v-model="book_status.id_user" name="id_user" hidden />
+                <input type="text" v-model="book_status.status" name="status" hidden />
+                <button type="button" @click="openModal(book.id_book.id)" class="btn btn-light">
+                  <span class="material-symbols-outlined"> bookmarks </span>
+                </button>
+              </form>
+
+              <!-- Modal para seleccionar estado -->
+              <div v-if="showModal" class="modal" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Seleccionar Estado del Libro</h5>
+                      <button type="button" class="btn-close" @click="showModal = false">X</button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="list-group">
+                        <button
+                          type="button"
+                          class="list-group-item list-group-item-action"
+                          v-for="status in statuses"
+                          :key="status"
+                          @click="selectStatus(status)"
+                        >
+                          {{ status }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Fin del modal -->
+            </div>
           </div>
         </div>
       </div>
@@ -95,7 +162,6 @@ export default {
 </template>
 
 <style scoped>
-
 .thumbnails {
   display: flex;
   flex-wrap: wrap;
@@ -142,5 +208,22 @@ textarea {
 .review {
   background-color: rgba(245, 245, 220, 0.619);
   border-radius: 8px;
+}
+.modal {
+  display: block; /* Mostrar el modal */
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+}
+
+.modal-dialog {
+  margin: 100px auto; /* Centrar el modal */
+}
+
+.btn-close {
+  background: none;
+  border: none;
+}
+
+.filled {
+  color: gold;
 }
 </style>
