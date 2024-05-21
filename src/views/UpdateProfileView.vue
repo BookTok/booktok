@@ -40,10 +40,6 @@ export default {
       register: {
         register: {
         rol: 'REG',
-        name: '',
-        surname: '',
-        password: '',
-        pic: null  // Añadimos una propiedad para la foto de perfil
       },
       },
       passwordStudent: ''
@@ -81,13 +77,13 @@ export default {
       this.register.password =
         this.register.password === '' ? this.passwordStudent : this.register.password
 
-      let formData = new FormData()
-      for (let key in this.register) {
-        formData.append(key, this.register[key])
-      }
+      // let formData = new FormData()
+      // for (let key in this.register) {
+      //   formData.append(key, this.register[key])
+      // }
 
       try {
-        await apiService.updateProfile(this.id, formData)
+        await apiService.updateProfile(this.id, this.register)
         this.$router.push('/profile')
       } catch (error) {
         this.addMsgArray('danger', 'Error al redirigir')
@@ -99,7 +95,7 @@ export default {
 
 <template>
   <p>Si no deseas cambiar la contraseña no introduzcas nada en el campo contraseña</p>
-  <Form :validation-schema="validationSchema" @submit="editStudent">
+  <Form :initial-values="register" :validation-schema="validationSchema" @submit="editStudent">
     <fieldset>
       <legend>Modificar perfil</legend>
 
