@@ -21,6 +21,11 @@ export default {
           prev: []
         }
       ],
+      my_lists: [
+        {
+          books: []
+        }
+      ],
       bool: ''
     }
   },
@@ -35,7 +40,10 @@ export default {
   computed: {
     ...mapState(useStore, {
       user: 'user'
-    })
+    }),
+    filteredLists() {
+      return this.my_lists.filter((list) => list.books && list.books.length > 0)
+    }
   },
   async mounted() {
     const apiService = new APIService(this.user.token)
@@ -94,6 +102,19 @@ export default {
           this.friend.id_publisher
         )
         this.bool = areF.data.bool
+      }
+    } catch (error) {
+      this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
+    }
+
+    try {
+      if (this.user.rol === 'REG') {
+        const lists = await apiService.getList(this.usuario.id)
+        this.my_lists = lists.data.data
+        for (let list of this.my_lists) {
+          const booksList = await apiService.getBooksInList(list.id)
+          list.books = booksList.data.data
+        }
       }
     } catch (error) {
       this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
@@ -223,6 +244,18 @@ export default {
       </div>
       <div v-if="this.usuario.rol === 'REG'" class="row lists">
         <h4>{{ this.usuario.name }} Listas</h4>
+        <div class="col-xl-3 col-md-12 folder list" v-for="list in filteredLists" :key="list.id">
+          <div class="thumbnails">
+            <h5>{{ list.name }}</h5>
+            <br />
+            <img
+              class="book-pic"
+              v-for="book in list.books.slice(0, 3)"
+              :key="book.id_book.id"
+              :src="book.id_book.pic"
+            />
+          </div>
+        </div>
       </div>
       <div v-else class="row">
         <h4>{{ this.usuario.name }} Libros</h4>

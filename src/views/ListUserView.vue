@@ -43,7 +43,9 @@ export default {
   },
   methods: {
     ...mapActions(useStore, ['cleanUser', 'addMsgArray']),
-    
+    showDetails(id){
+            this.$router.push('/show-details/book/' + id)
+        },
   }
 }
 </script>
@@ -59,6 +61,7 @@ export default {
             <h5>{{ book.id_book.name }}</h5>
             <p>{{ book.author }}</p>
             <p>{{ book.publisher }}</p>
+            <button class="btn btn-light" @click="showDetails(book.id_book.id)">Detalles</button>
           </div>
         </div>
       </div>
