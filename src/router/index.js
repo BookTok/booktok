@@ -13,6 +13,7 @@ import FriendView from '@/views/FriendView.vue'
 import PersonView from '@/views/PersonView.vue'
 import SearchView from '@/views/SearchView.vue'
 import UpdateProfileView from '@/views/UpdateProfileView.vue'
+import ListUserView from '@/views/ListUserView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -95,6 +96,12 @@ const router = createRouter({
       props: true,
       component: UpdateProfileView,
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/user-list/:id',
+      name: 'user-list',
+      props: true,
+      component: ListUserView,
     },
   ]
 })

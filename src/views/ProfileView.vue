@@ -12,13 +12,22 @@ export default {
       readBooks: [],
       readingBooks: [],
       wishlistBooks: [],
-      defaultPic: foto // Añadido defaultPic aquí
+      defaultPic: foto,
+      my_lists: [
+        {
+          books: []
+        }
+      ],
+      showModal: false
     }
   },
   computed: {
     ...mapState(useStore, {
       user: 'user'
-    })
+    }),
+    filteredLists() {
+      return this.my_lists.filter((list) => list.books && list.books.length > 0)
+    }
   },
   async mounted() {
     const apiService = new APIService(this.user.token)
@@ -49,13 +58,26 @@ export default {
     } catch (error) {
       this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
     }
+
+    try {
+      if (this.user.rol === 'REG') {
+        const lists = await apiService.getList(this.usuario.id)
+        this.my_lists = lists.data.data
+        for (let list of this.my_lists) {
+          const booksList = await apiService.getBooksInList(list.id)
+          list.books = booksList.data.data
+        }
+      }
+    } catch (error) {
+      this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
+    }
   },
   methods: {
     ...mapActions(useStore, ['cleanUser', 'addMsgArray']),
     edit() {
       if (this.user.rol === 'REG') {
         this.$router.push('/user-update/' + Number(this.usuario.id))
-      } 
+      }
     },
     async eliminar() {
       const apiService = new APIService(this.user.token)
@@ -63,7 +85,7 @@ export default {
         if (confirm('¿Seguro que quieres eliminar tu perfil?')) {
           if (this.user.rol === 'REG') {
             await apiService.deleteUser(this.usuario.id)
-          } 
+          }
           this.$router.push('/')
           localStorage.clear()
           this.cleanUser()
@@ -78,8 +100,30 @@ export default {
     followView() {
       this.$router.push('/follow')
     },
-    friendView(){
+    friendView() {
       this.$router.push('/friends')
+    },
+    async createList() {
+      const newList = {
+        name: this.newListName,
+        id_user: this.usuario.id,
+        private: 1
+      }
+
+      const apiService = new APIService(this.user.token)
+      await apiService
+        .addList(newList)
+        .then((response) => {
+          this.addMsgArray('success', 'Lista agregada exitosamente')
+          this.showModal = false
+        })
+        .catch((error) => {
+          this.addMsgArray('danger', 'Error al agregar la lista')
+          console.error('Error al agregar la lista:', error)
+        })
+    },
+    listView(id){
+      this.$router.push('/user-list/'+ id)
     }
   }
 }
@@ -154,7 +198,50 @@ export default {
         </div>
       </div>
       <div class="row lists">
-        <h4>Mis Listas</h4>
+        <div class="text-center d-flex">
+          <h4>Mis Listas</h4>
+          <div class="text-end">
+            <span class="material-symbols-outlined" @click="showModal = true"> add </span>
+          </div>
+          <div v-if="showModal" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Agregar Nueva Lista</h5>
+                  <button type="button" class="btn-close" @click="showModal = false">X</button>
+                </div>
+                <div class="modal-body">
+                  <form @submit.prevent="createList">
+                    <div class="mb-3">
+                      <label for="newListName" class="form-label">Nombre de la Lista:</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="newListName"
+                        v-model="newListName"
+                        required
+                      />
+                    </div>
+                    <button type="submit" class="btn btn-light">Crear Lista</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-12 folder list" v-for="list in filteredLists" :key="list.id">
+          <div class="thumbnails">
+            <h5>{{ list.name }}</h5>
+            <br />
+            <img
+              class="book-pic"
+              v-for="book in list.books.slice(0, 3)"
+              :key="book.id_book.id"
+              :src="book.id_book.pic"
+              @click="listView(list.id)"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -184,6 +271,10 @@ export default {
   margin-top: 5px;
 }
 
+.list {
+  margin: 5px;
+}
+
 .book-pic {
   height: 100px;
   width: 75px;
@@ -199,6 +290,7 @@ h4 {
   text-align: center;
 }
 .material-symbols-outlined {
+  cursor: pointer;
   font-size: 35px;
   font-variation-settings:
     'FILL' 0,
@@ -206,4 +298,75 @@ h4 {
     'GRAD' 0,
     'opsz' 24;
 }
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-dialog {
+    background-color: #fff;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+
+  .modal-body {
+    padding-bottom: 20px;
+  }
+
+  .modal-title {
+    margin: 0;
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #888;
+  }
+
+  /* Estilos para el formulario en el modal */
+  form {
+    margin-top: 20px;
+  }
+
+  .form-label {
+    margin-bottom: 5px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 </style>

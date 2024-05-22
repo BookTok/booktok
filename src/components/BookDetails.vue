@@ -11,6 +11,7 @@ export default {
   data() {
     return {
       showModal: false,
+      showModalList: false,
       book: {},
       rating: '',
       reviews: [],
@@ -26,7 +27,10 @@ export default {
         id_book: '',
         status: ''
       },
-      statuses: ['READ', 'READING', 'WISH']
+      statuses: ['READ', 'READING', 'WISH'],
+      listas_user: [],
+      bookList: {},
+      bool: ''
     }
   },
   props: {
@@ -74,14 +78,23 @@ export default {
         const responseComapny = await apiService.getUserEmail(this.user.email)
         this.usuario = responseComapny.data
         const response = await apiService.getBookReviewUser(this.usuario.id, this.book.id)
-      this.review.id = response.data.data.id
-      this.review.rating = response.data.data.rating
-      this.review.review = response.data.data.review
-      this.review.id_user = response.data.data.id_user.id
-      this.review.id_book = response.data.data.book.id
+        this.review.id = response.data.data.id
+        this.review.rating = response.data.data.rating
+        this.review.review = response.data.data.review
+        this.review.id_user = response.data.data.id_user.id
+        this.review.id_book = response.data.data.book.id
       }
     } catch (error) {
       console.log(error)
+    }
+
+    try {
+      if (this.user.rol === 'REG') {
+        const lists = await apiService.getList(this.usuario.id)
+        this.listas_user = lists.data.data
+      }
+    } catch (error) {
+      this.addMsgArray('danger', 'No se ha podido recuperar los datos intentelo mas tarde')
     }
   },
   methods: {
@@ -123,11 +136,44 @@ export default {
     async handleSubmit() {
       const apiService = new APIService(this.user.token)
       try {
-        await apiService.updateStateBook(this.book_status.id_book, this.book_status.id_user,this.book_status.status,)
+        await apiService.updateStateBook(
+          this.book_status.id_book,
+          this.book_status.id_user,
+          this.book_status.status
+        )
         this.addMsgArray('success', 'Estado del libro actualizado')
       } catch (error) {
         this.addMsgArray('danger', 'Error al enviar el estado del libro')
       }
+    },
+    async selectList(listId) {
+      this.bookList.id_book = this.book.id
+      this.bookList.id_list = listId
+
+      const apiService = new APIService(this.user.token)
+      try {
+        const isInList = await apiService.isInList(listId, this.book.id)
+        if (isInList.data.bool === 1) {
+          this.addMsgArray('danger', 'El libro ya está en esta lista')
+        } else {
+          this.showModalList = false
+          this.addBookToList()
+        }
+      } catch (error) {
+        this.addMsgArray('danger', 'Error al verificar la lista')
+      }
+    },
+    async addBookToList() {
+      const apiService = new APIService(this.user.token)
+      try {
+        await apiService.addBookToList(this.bookList)
+        this.addMsgArray('success', 'Libro añadido a la lista')
+      } catch (error) {
+        this.addMsgArray('danger', 'Error al añadir el libro a la lista, no existe la lista')
+      }
+    },
+    listContainsBook(listId) {
+      return this.listas_user.find((list) => list.id === listId && list.containsBook)
     }
   }
 }
@@ -157,7 +203,7 @@ export default {
             <span class="material-symbols-outlined"> bookmarks </span>
           </button>
         </form>
-        
+
         <!-- Modal para seleccionar estado -->
         <div v-if="showModal" class="modal" tabindex="-1">
           <div class="modal-dialog">
@@ -176,6 +222,37 @@ export default {
                     @click="selectStatus(status)"
                   >
                     {{ status }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario para añadir el libro a una lista -->
+        <button type="button" @click="showModalList = true" class="btn btn-light">
+          <span class="material-symbols-outlined"> bookmark_add </span>
+        </button>
+
+        <!-- Modal para seleccionar lista -->
+        <div v-if="showModalList" class="modal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Lista</h5>
+                <button type="button" class="btn-close" @click="showModalList = false">X</button>
+              </div>
+              <div class="modal-body">
+                <div class="list-group">
+                  <button
+                    type="button"
+                    class="list-group-item list-group-item-action"
+                    v-for="list in listas_user"
+                    :key="list.id"
+                    :disabled="listContainsBook(list.id)"
+                    @click="selectList(list.id)"
+                  >
+                    {{ list.name }}
                   </button>
                 </div>
               </div>

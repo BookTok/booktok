@@ -140,4 +140,19 @@ export default class APIService {
     updateStateBook(id_book, id_user, status){
         return this.apiClient.post('/book-status-update-state/' + id_book + '/' + id_user + '?status=' + status)
     }
+    getList(id_user){
+        return this.apiClient.get('/user-list/'+id_user)
+    }
+    getBooksInList(id_list){
+        return this.apiClient.get('/book-list/'+id_list)
+    }
+    addBookToList(bookList){
+        return this.apiClient.post('/book-list-register/', bookList)
+    }
+    isInList(id_list, id_book){
+        return this.apiClient.get('/is-in-list/'+id_list+'/'+id_book)
+    }
+    addList(list){
+        return this.apiClient.post('/user-list/', list)
+    }
 }
