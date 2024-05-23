@@ -14,13 +14,11 @@ export default {
 }
 </script>
 <template>
-   <div v-if="follow.author" class="col-12 lists">
-    <h3>Autores:</h3>
+   <div v-if="follow.author" class="col-xl-2 col-md-12 lists">
     <img class="icon" :src="follow.author.user.pic" :alt="follow.author.name" />
     <p>{{ follow.author.name }}</p>
    </div>
-   <div v-if="follow && follow.publisher" class="col-12 lists">
-    <h3>Editoriales</h3>
+   <div v-if="follow && follow.publisher" class="col-xl-2 col-md-12 lists">
     <img class="icon" :src="follow.publisher.user.pic" :alt="follow.publisher.name" />
     <p>{{ follow.publisher.name }}</p>
    </div>

@@ -47,6 +47,7 @@ export default {
 arrow_back_ios
 </span>
    <div class="row">
+    <h3>Seguidos: </h3>
     <follow-li v-for="follow in follows" :follow="follow" :key="follow"></follow-li>
    </div>
 </template>
