@@ -155,4 +155,10 @@ export default class APIService {
     addList(list){
         return this.apiClient.post('/user-list/', list)
     }
+    friensActivity(){
+        return this.apiClient.get('/friends-activity')
+    }
+    recommendedBook(){
+        return this.apiClient.get('/recommended-books')
+    }
 }
