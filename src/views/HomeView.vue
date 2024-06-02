@@ -69,7 +69,7 @@ export default {
         <home-li v-for="libro in this.libros.data" :libro="libro" :key="libro.id"></home-li>
       </div>
       <div v-if="this.user && Object.values(this.user).length !== 0" class="col-lg-4 col-md-4 activity-container">
-        <h5>Actividad de Amigos</h5>
+        <h5>Actividad de tus amigos</h5>
         <div v-for="activity in friendsActivity" :key="activity.id" class="activity-item" v-html="generateActivityMessage(activity)"></div>
       </div>
     </div>
@@ -87,6 +87,7 @@ export default {
   background-color: #f8f9fa6b;
   max-width: 100%;
   margin-top: 2%;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.173); 
 }
 
 .btn {
@@ -105,20 +106,6 @@ export default {
 .btn:active {
   top: 3px;
   box-shadow: none;
-}
-
-.student {
-  margin-top: 15px;
-  background: #7bb0ff;
-  color: white;
-  box-shadow: 0px 3px 0px #2c416e;
-}
-
-.company {
-  margin-top: 15px;
-  background: #ff8181;
-  color: white;
-  box-shadow: 0px 3px 0px #2c416e;
 }
 
 .home-li-container {
@@ -141,10 +128,11 @@ export default {
 }
 
 .activity-container {
-  background-color: #f8f9fa6b;
+  background-color: #ffebcdb5;
   padding: 1rem;
   margin-top: 1rem;
   border-radius: 6px;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 .activity-item {

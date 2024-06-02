@@ -32,6 +32,10 @@ export default {
         showDetails(id){
             this.$router.push('/show-details/book/' + id)
         },
+        truncateDescription(description) {
+      const maxLength = 100; // Puedes ajustar este valor según tus necesidades
+      return description.length > maxLength ? description.substring(0, maxLength) + '...' : description;
+    },
     }
 }
 </script>
@@ -44,8 +48,8 @@ export default {
         <div class="rating">
             <span v-for="n in 5" :key="n" :class="{ filled: n <= (libro.rating_average || rating) }">★</span>
         </div> 
-        <p class="description">Descripción: {{ libro.description }}</p>
-        <button class="details btn" @click="showDetails(libro.id)">Detalles</button>
+        <p class="description">{{ truncateDescription(libro.description) }}</p>
+        <button class="details btn btn-light" @click="showDetails(libro.id)">Detalles</button>
     </div>    
 </template>
 
@@ -54,19 +58,25 @@ export default {
     display: inline-block; /* Hace que el contenedor ocupe solo el espacio que necesita */
     max-width: 250px; /* Ancho máximo igual al del libro */
     max-height: 650px;
+    width: fit-content;
+    height: 550px;
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.5); 
+    background-color: rgba(255, 222, 144, 0.153); 
     border-radius: 10px; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7); 
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.135); 
     padding: 10px;
     margin: 5px;
 }
 
-.details{
-    background-color: #E64663;
+.description {
+    max-height: 100px; /* Altura máxima para la descripción */
+    overflow: hidden; /* Oculta el texto que se desborda */
+    text-overflow: ellipsis; /* Añade puntos suspensivos (...) al final del texto si se desborda */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
 }
 .btn {
-    margin-bottom: 10px;
+    border-color: #ccc;
+    margin-bottom: 5px;
     transition: box-shadow 0.3s ease;
 }
 .btn:hover{

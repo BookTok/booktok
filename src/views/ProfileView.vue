@@ -131,36 +131,33 @@ export default {
 
 <template>
   <div class="card container">
-    <div class="card-header">
+    <div>
       <h2 class="text-center">Perfil de Usuario</h2>
     </div>
     <div class="card-body">
       <div class="row">
-        <div class="col-4">
+        <div class="col-xl-4 col-md-12 text-center">
           <div class="image-container">
             <img class="icon" :src="usuario.pic || defaultPic" :alt="usuario.name" />
-            <span class="material-symbols-outlined upload">upload</span>
           </div>
-          <p><strong>Nombre:</strong> {{ usuario.name }}</p>
-          <p><strong>Apellidos:</strong> {{ usuario.surname }}</p>
-          <p><strong>Email:</strong> {{ usuario.email }}</p>
+          <p><strong>{{ usuario.name }}</strong></p>
         </div>
-        <div class="col-4 text-center">
+        <div class="col-xl-4 col-md-12 text-center">
           <button @click="friendView" class="btn mt-2">
-            <span class="material-symbols-outlined"> diversity_4 </span> Amigos
+            <span class="material-symbols-outlined"> diversity_4 </span>
           </button>
           <button @click="followView" class="btn mt-2">
-            <span class="material-symbols-outlined"> group </span> Seguidos
+            <span class="material-symbols-outlined"> group </span>
           </button>
         </div>
-        <div class="col-4 text-end">
-          <button class="btn btn-light mt-2" @click="edit">Editar Perfil</button>
-          <button class="btn btn-secondary mt-2" @click="eliminar">Eliminar Perfil</button>
+        <div class="col-xl-4 col-md-12 text-xl-end text-md-center">
+          <button class="btn btn-light mt-2 edit" @click="edit">Editar Perfil</button>
+          <button class="btn mt-2 delete" @click="eliminar">Eliminar Perfil</button>
         </div>
       </div>
       <div class="row lists">
         <h4>Listas</h4>
-        <div class="col-4">
+        <div class="col-xl-4 col-md-12">
           <h5>LEIDOS</h5>
           <div class="folder" @click="viewList('READ')">
             <div class="thumbnails" v-if="readBooks.data">
@@ -173,7 +170,7 @@ export default {
             </div>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-xl-4 col-md-12">
           <h5>LEYENDO</h5>
           <div class="folder" @click="viewList('READING')">
             <div class="thumbnails" v-if="readingBooks.data">
@@ -186,8 +183,8 @@ export default {
             </div>
           </div>
         </div>
-        <div class="col-4">
-          <h5>WISHLIST</h5>
+        <div class="col-xl-4 col-md-12">
+          <h5>POR LEER</h5>
           <div class="folder" @click="viewList('WISH')">
             <div class="thumbnails" v-if="wishlistBooks.data">
               <img
@@ -235,7 +232,6 @@ export default {
         <div class="col-xl-3 col-md-12 folder list" v-for="list in filteredLists" :key="list.id">
           <div class="thumbnails">
             <h5>{{ list.name }}</h5>
-            <br />
             <img
               class="book-pic"
               v-for="book in list.books.slice(0, 3)"
@@ -253,10 +249,22 @@ export default {
 <style scoped>
 .container {
   max-width: 90%;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 5px;
 }
 
 .btn {
   margin-right: 15px;
+}
+
+.edit{
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.delete{
+  background-color: #ffebcdb5;
+  color: black;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 .image-container {
@@ -271,6 +279,7 @@ export default {
   overflow: hidden;
   object-fit: cover;
   border: 3px solid rgba(255, 235, 205, 0.664);
+  box-shadow: 0 0 4px 4px rgba(255, 215, 114, 0.656)
 }
 
 .upload {
@@ -283,9 +292,10 @@ export default {
 }
 
 .lists {
-  background-color: #ffebcd5d;
+  background-color: #ffebcdb5;
   border-radius: 8px;
-  margin-top: 5px;
+  margin-top: 15px;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1)
 }
 
 .list {
@@ -309,6 +319,7 @@ h4 {
 .material-symbols-outlined {
   cursor: pointer;
   font-size: 35px;
+  color: #ffc559cf;
   font-variation-settings:
     'FILL' 0,
     'wght' 400,
@@ -376,14 +387,5 @@ form {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
 }
 </style>

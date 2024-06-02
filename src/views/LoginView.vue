@@ -66,19 +66,9 @@ export default {
                 this.$router.push('/log-in')
             }
         },
-        async recover() {
-            if (this.user.email == '') {
-                this.addMsgArray('danger', 'Para poder enviar el email necesitas introducir el email')
-            } else {
-                try {
-                    const response = await axios.get(SERVER + '/sendEmail/' + this.user.email)
-                    console.log(response)
-                    this.addMsgArray('success', 'Email para recuperar la contraseña enviado con exito, revise su correo')
-                } catch (error) {
-                    this.addMsgArray('danger', 'Eres un administrador no puedes recuperar contraseña')
-                }
-            }
-        }
+        register(){
+      this.$router.push("/user-add")
+    }
     }
 }
 </script>
@@ -92,9 +82,7 @@ export default {
         <ErrorMessage name="contraseña" class="error" />
         <button class="btn" type="submit">Log in</button>
         <h3>¿No tienes cuenta?</h3>
-        <button class="btn" @click="register()"> Registrate </button>
-        <h3>¿Te has olvidado de la contraseña?</h3>
-        <button class="btn recover" @click="recover()"> ¿Te has olvidado de la contraseña? </button>
+        <button class="btn" @click="register"> Registrate </button>
     </form>
 </template>
 
@@ -182,7 +170,7 @@ h5>a:hover {
 }
 
 form {
-    background: beige;
+    background: #ffebcdb5;
     border-radius: 6px;
     padding: 20px;
     padding-top: 30px;
@@ -195,7 +183,7 @@ h1 {
     text-align: center;
     font-size: 1.4em;
     font-weight: 700;
-    color: #ccc;
+    color: #353535;
     margin-bottom: 24px;
 }
 

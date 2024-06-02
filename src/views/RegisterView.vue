@@ -226,7 +226,7 @@ body {
   margin: 0 auto;
   max-width: 570px;
   width: 100%;
-  background: beige;
+  background: #ffebcdb5;
   padding: 40px;
 }
 
@@ -286,7 +286,7 @@ body {
 }
 
 .formbold-form-label {
-  color: #536387;
+  color: #434343;
   font-size: 14px;
   line-height: 24px;
   display: block;
@@ -300,7 +300,7 @@ body {
   user-select: none;
   font-size: 16px;
   line-height: 24px;
-  color: #536387;
+  color: #434343;
 }
 
 .formbold-checkbox-label a {
@@ -338,7 +338,7 @@ body {
   padding: 14px 25px;
   border: none;
   font-weight: 500;
-  background-color: #6a64f1;
+  background-color: #a3a2bc;
   color: white;
   cursor: pointer;
   margin-top: 25px;

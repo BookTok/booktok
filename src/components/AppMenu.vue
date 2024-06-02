@@ -41,7 +41,7 @@ export default {
 
 <template>
   <nav class="row">
-    <div class="col-4 border-top border-bottom border-light bg-light">
+    <div class="navar col-4 border-top border-bottom border-light">
       <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
           <button
@@ -92,14 +92,14 @@ export default {
       </nav>
     </div>
     <div
-      class="col-4 border-top border-bottom border-light bg-light d-flex align-items-center justify-content-end text-center"
+      class="navar-img col-4 border-top border-bottom border-light d-flex align-items-center justify-content-end text-center"
     >
     <div @click="index()">
       <img src="/Book__1.png" alt="booktok">
     </div>
     </div>
     <div
-      class="col-4 border-top border-bottom border-light bg-light d-flex align-items-center justify-content-end text-center"
+      class="navar-end col-4 border-top border-bottom border-light d-flex align-items-center justify-content-end text-center"
     >
       <div class="navbar-nav">
         <div class="dropdown align-items-center justify-content-end" style="color: rgba(0,0,0,.55)">
@@ -133,5 +133,21 @@ img{
 }
 .search{
   cursor: pointer;
+}
+
+.navar{
+  background-color: #ffebcdb5;
+  border-top-left-radius: 5px; 
+  border-bottom-left-radius: 5px;
+}
+
+.navar-img{
+  background-color: #ffebcdb5;
+}
+
+.navar-end{
+  background-color: #ffebcdb5;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 </style>
