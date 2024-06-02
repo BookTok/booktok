@@ -38,9 +38,7 @@ export default {
     return {
       validationSchema,
       register: {
-        register: {
-        rol: 'REG',
-      },
+        rol: 'REG'
       },
       passwordStudent: ''
     }
@@ -60,7 +58,7 @@ export default {
     const apiService = new APIService(this.user.token)
     try {
       const responseComapny = await apiService.getUserEmail(this.user.email)
-        this.register = responseComapny.data
+      this.register = responseComapny.data
     } catch (error) {
       this.addMsgArray('danger', 'No se ha podido obtener los datos')
     }
@@ -69,7 +67,7 @@ export default {
   },
   methods: {
     ...mapActions(useStore, ['addMsgArray']),
-    onFileChange(event) {
+    onImageChange(event) {
       this.register.pic = event.target.files[0]
     },
     async editStudent() {
@@ -77,13 +75,13 @@ export default {
       this.register.password =
         this.register.password === '' ? this.passwordStudent : this.register.password
 
-      // let formData = new FormData()
-      // for (let key in this.register) {
-      //   formData.append(key, this.register[key])
-      // }
+      let formData = new FormData()
+      for (let key in this.register) {
+        formData.append(key, this.register[key])
+      }
 
       try {
-        await apiService.updateProfile(this.id, this.register)
+        await apiService.updateProfile(this.id, formData)
         this.$router.push('/profile')
       } catch (error) {
         this.addMsgArray('danger', 'Error al redirigir')
@@ -166,12 +164,7 @@ export default {
         <label class="col-md-8 control-label">Foto Perfil:</label>
         <div class="col-md-8 inputGroupContainer">
           <div class="input-group">
-            <input
-              name="pic"
-              class="form-control"
-              type="file"
-              @change="onFileChange"
-            />
+            <Field name="pic" id="pic" class="form-control" type="file" @change="onImageChange" />
             <ErrorMessage name="pic" class="error" />
           </div>
         </div>

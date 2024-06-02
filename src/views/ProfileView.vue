@@ -122,8 +122,8 @@ export default {
           console.error('Error al agregar la lista:', error)
         })
     },
-    listView(id){
-      this.$router.push('/user-list/'+ id)
+    listView(id) {
+      this.$router.push('/user-list/' + id)
     }
   }
 }
@@ -137,7 +137,10 @@ export default {
     <div class="card-body">
       <div class="row">
         <div class="col-4">
-          <img class="icon" :src="usuario.pic || defaultPic" :alt="usuario.name" />
+          <div class="image-container">
+            <img class="icon" :src="usuario.pic || defaultPic" :alt="usuario.name" />
+            <span class="material-symbols-outlined upload">upload</span>
+          </div>
           <p><strong>Nombre:</strong> {{ usuario.name }}</p>
           <p><strong>Apellidos:</strong> {{ usuario.surname }}</p>
           <p><strong>Email:</strong> {{ usuario.email }}</p>
@@ -256,6 +259,11 @@ export default {
   margin-right: 15px;
 }
 
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+
 .icon {
   width: 200px; /* ajusta el tamaño de la imagen */
   height: 200px; /* ajusta el tamaño de la imagen */
@@ -263,6 +271,15 @@ export default {
   overflow: hidden;
   object-fit: cover;
   border: 3px solid rgba(255, 235, 205, 0.664);
+}
+
+.upload {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: rgb(0, 0, 0); /* Color del icono */
+  padding: 5px; /* Ajusta según sea necesario */
+  border-radius: 0 0 0 5px; /* Bordes redondeados */
 }
 
 .lists {
@@ -300,73 +317,73 @@ h4 {
 }
 
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .modal-dialog {
-    background-color: #fff;
-    border-radius: 10px;
-    max-width: 500px;
-    width: 100%;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-  }
+.modal-dialog {
+  background-color: #fff;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 100%;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
 
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-  }
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
 
-  .modal-body {
-    padding-bottom: 20px;
-  }
+.modal-body {
+  padding-bottom: 20px;
+}
 
-  .modal-title {
-    margin: 0;
-  }
+.modal-title {
+  margin: 0;
+}
 
-  .btn-close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    color: #888;
-  }
+.btn-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #888;
+}
 
-  /* Estilos para el formulario en el modal */
-  form {
-    margin-top: 20px;
-  }
+/* Estilos para el formulario en el modal */
+form {
+  margin-top: 20px;
+}
 
-  .form-label {
-    margin-bottom: 5px;
-  }
+.form-label {
+  margin-bottom: 5px;
+}
 
-  .form-control {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-  .btn-primary {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
 </style>

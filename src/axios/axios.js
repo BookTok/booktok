@@ -161,4 +161,7 @@ export default class APIService {
     recommendedBook(){
         return this.apiClient.get('/recommended-books')
     }
+    upload_book(book){
+        return this.apiClient.post('/books-store', book)
+    }
 }
