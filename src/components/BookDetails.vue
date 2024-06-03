@@ -181,7 +181,7 @@ export default {
 <template>
   <div class="row details">
     <div class="col-4">
-      <img :src="book.pic" :alt="book.name" />
+      <img :src="book.pic" :alt="book.name" class="book-image"/>
       <p><span>Descripción: </span>{{ book.description }}</p>
       <p><span>Fecha publicación: </span>{{ book.publication }}</p>
     </div>
@@ -301,12 +301,11 @@ export default {
 
 <style scoped>
 .details {
-  background-color: #f2f2f2;
+  margin-top: 5px;
+  background-color: #f2f2f25d;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: -webkit-fill-available;
-  max-height: -webkit-fill-available;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 .details h5 {
@@ -346,9 +345,16 @@ span {
   border: none;
 }
 
-img {
-  max-width: -webkit-fill-available;
-  max-height: -webkit-fill-available;
+.book-image-container {
+  width: 200px; /* Ancho del contenedor de la imagen */
+  height: 300px; /* Alto del contenedor de la imagen */
+  overflow: hidden; /* Oculta cualquier parte de la imagen que se desborde */
+}
+
+.book-image {
+  width: 200px; /* Haz que la imagen ocupe todo el ancho del contenedor */
+  height: 300px; /* Haz que la imagen ocupe todo el alto del contenedor */
+  object-fit: cover; /* Escala la imagen para que cubra todo el contenedor */
 }
 
 .rating {

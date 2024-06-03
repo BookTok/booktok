@@ -37,9 +37,6 @@ export default {
     padding: 10px;
     margin-bottom: 5px;
 }
-.details{
-    background-color: #E64663;
-}
 .btn {
     margin-bottom: 10px;
     transition: box-shadow 0.3s ease;
@@ -67,7 +64,7 @@ h6{
 }
 .rat{
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.5); 
+    background-color: #ffebcdb5;
     border-radius: 10px; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7); 
     padding: 10px;

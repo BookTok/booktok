@@ -75,13 +75,13 @@ export default {
       this.register.password =
         this.register.password === '' ? this.passwordStudent : this.register.password
 
-      let formData = new FormData()
-      for (let key in this.register) {
-        formData.append(key, this.register[key])
-      }
+      // let formData = new FormData()
+      // for (let key in this.register) {
+      //   formData.append(key, this.register[key])
+      // }
 
       try {
-        await apiService.updateProfile(this.id, formData)
+        await apiService.updateProfile(this.id, this.register)
         this.$router.push('/profile')
       } catch (error) {
         this.addMsgArray('danger', 'Error al redirigir')
