@@ -169,13 +169,13 @@ export default {
   <div class="card container">
     <div class="card-body">
       <div class="row">
-        <div class="col-4">
-          <img class="icon" :src="this.usuario.icon || this.usuario.pic" :alt="this.usuario.name" />
-          <p><strong>Nombre:</strong> {{ this.usuario.name }}</p>
-          <p><strong>Apellidos:</strong> {{ this.usuario.surname }}</p>
-          <p><strong>Email:</strong> {{ this.usuario.email }}</p>
+        <div class="col-xl-4 col-md-12 text-center">
+          <div class="image-container">
+            <img class="icon" :src="usuario.pic || usuario.icon" :alt="usuario.name" />
+          </div>
+          <p><strong>{{ usuario.name }}</strong></p>
         </div>
-        <div class="col-4 text-center">
+        <div class="col-xl-4 col-md-12 text-center">
           <Form v-if="this.usuario.rol === 'REG'" @submit="followFriend()">
             <Field type="number" v-model="friend.id_user" name="id_user" hidden />
             <Field type="number" v-model="friend.id_friend" name="id_friend" hidden />
@@ -199,7 +199,7 @@ export default {
       </div>
       <div v-if="this.usuario.rol === 'REG'" class="row lists">
         <h4>Listas</h4>
-        <div class="col-4">
+        <div class="col-xl-4 col-md-12">
           <h5>LEIDOS</h5>
           <div class="folder">
             <!-- <img src="/carpeta-leidos.png" alt="Leídos" /> -->
@@ -213,7 +213,7 @@ export default {
             </div>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-xl-4 col-md-12">
           <h5>LEYENDO</h5>
           <div class="folder">
             <!-- <img src="/carpeta-leyendo.png" alt="Leyendo" /> -->
@@ -227,7 +227,7 @@ export default {
             </div>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-xl-4 col-md-12">
           <h5>WISHLIST</h5>
           <div class="folder">
             <!-- <img src="/carpeta-wishlist.png" alt="Wishlist" /> -->
@@ -242,7 +242,7 @@ export default {
           </div>
         </div>
       </div>
-      <div v-if="this.usuario.rol === 'REG'" class="row lists">
+      <div v-if="this.usuario.rol === 'REG' && filteredLists.length >= 1" class="row lists">
         <h4>{{ this.usuario.name }} Listas</h4>
         <div class="col-xl-3 col-md-12 folder list" v-for="list in filteredLists" :key="list.id">
           <div class="thumbnails">
@@ -257,7 +257,7 @@ export default {
           </div>
         </div>
       </div>
-      <div v-else class="row">
+      <div v-if="this.usuario.rol === 'AUT' || this.usuario.rol === 'EDI'" class="row">
         <h4>{{ this.usuario.name }} Libros</h4>
         <home-li v-for="libro in this.libros.data" :libro="libro" :key="libro.id"></home-li>
       </div>
@@ -268,10 +268,27 @@ export default {
 <style scoped>
 .container {
   max-width: 90%;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 5px;
 }
 
 .btn {
   margin-right: 15px;
+}
+
+.edit{
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.delete{
+  background-color: #ffebcdb5;
+  color: black;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
 }
 
 .icon {
@@ -281,12 +298,27 @@ export default {
   overflow: hidden;
   object-fit: cover;
   border: 3px solid rgba(255, 235, 205, 0.664);
+  box-shadow: 0 0 4px 4px rgba(255, 215, 114, 0.656)
+}
+
+.upload {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: rgb(0, 0, 0); /* Color del icono */
+  padding: 5px; /* Ajusta según sea necesario */
+  border-radius: 0 0 0 5px; /* Bordes redondeados */
 }
 
 .lists {
-  background-color: #ffebcd5d;
+  background-color: #ffebcdb5;
   border-radius: 8px;
-  margin-top: 5px;
+  margin-top: 15px;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1)
+}
+
+.list {
+  margin: 5px;
 }
 
 .book-pic {
@@ -304,11 +336,75 @@ h4 {
   text-align: center;
 }
 .material-symbols-outlined {
+  cursor: pointer;
   font-size: 35px;
+  color: #ffc559cf;
   font-variation-settings:
     'FILL' 0,
     'wght' 400,
     'GRAD' 0,
     'opsz' 24;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-dialog {
+  background-color: #fff;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 100%;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-body {
+  padding-bottom: 20px;
+}
+
+.modal-title {
+  margin: 0;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #888;
+}
+
+/* Estilos para el formulario en el modal */
+form {
+  margin-top: 20px;
+}
+
+.form-label {
+  margin-bottom: 5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 </style>

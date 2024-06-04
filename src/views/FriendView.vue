@@ -53,5 +53,13 @@ arrow_back_ios
 </template>
 
 <style scoped>
-
+.material-symbols-outlined {
+  margin-top: 5px;
+  cursor: pointer; 
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
 </style>

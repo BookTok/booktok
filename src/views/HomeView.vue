@@ -66,14 +66,14 @@ export default {
     <div class="row">
       <h3>Mejor valorados</h3>
       <div class="col-lg-8 col-md-8 home-li-container">
-        <home-li v-for="libro in this.libros.data" :libro="libro" :key="libro.id"></home-li>
+        <home-li v-for="libro in libros.data" :libro="libro" :key="libro.id"></home-li>
       </div>
-      <div v-if="this.user && Object.values(this.user).length !== 0" class="col-lg-4 col-md-4 activity-container">
+      <div v-if="user && Object.values(user).length !== 0" class="col-lg-3 col-md-4 activity-container">
         <h5>Actividad de tus amigos</h5>
         <div v-for="activity in friendsActivity" :key="activity.id" class="activity-item" v-html="generateActivityMessage(activity)"></div>
       </div>
     </div>
-    <div class="row" v-if="this.user && Object.values(this.user).length !== 0 && recommendedBooks.length >= 1">
+    <div class="row" v-if="user && Object.values(user).length !== 0 && recommendedBooks.length >= 1">
       <h3>Te interesarán</h3>
       <div class="col-lg-8 col-md-8 home-li-container">
         <home-li v-for="libro in recommendedBooks" :libro="libro" :key="libro.id"></home-li>
@@ -108,20 +108,25 @@ export default {
   box-shadow: none;
 }
 
-.home-li-container {
+.row {
   display: flex;
   flex-wrap: wrap;
 }
 
+.home-li-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* Añadir espacio entre los elementos */
+}
+
 .col-lg-8 {
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
 }
 
 .col-lg-4 {
-  position: sticky;
-  top: 0;
-  align-self: flex-start;
+  flex: 1;
   background-color: white; /* Añade un color de fondo si es necesario */
   padding: 1rem; /* Añade un poco de padding para darle espacio */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade un poco de sombra si es necesario */
@@ -133,6 +138,7 @@ export default {
   margin-top: 1rem;
   border-radius: 6px;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
+  height: fit-content;
 }
 
 .activity-item {

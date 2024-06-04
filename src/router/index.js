@@ -64,7 +64,6 @@ const router = createRouter({
       name: 'books-type',
       props: true,
       component: BooksView,
-      meta: { requiresAuth: true }
     },
     {
       path: '/follow',

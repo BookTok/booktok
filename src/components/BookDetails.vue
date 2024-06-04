@@ -180,13 +180,13 @@ export default {
 </script>
 <template>
   <div class="row details">
-    <div class="col-4">
+    <div class="col-xl-4 col-md-12">
       <img :src="book.pic" :alt="book.name" class="book-image"/>
-      <p><span>Descripción: </span>{{ book.description }}</p>
+      <h5>{{ book.name }}</h5>
       <p><span>Fecha publicación: </span>{{ book.publication }}</p>
     </div>
-    <div class="col-4">
-      <h5>{{ book.name }}</h5>
+    <div class="col-xl-4 col-md-12">      
+      <p><span>Descripción: </span>{{ book.description }}</p>
       <p class="point" v-if="book.author" @click="getUser(book.author.user.id)">
         <span>Autor: </span>{{ book.author.name }}
       </p>
@@ -195,7 +195,7 @@ export default {
       </p>
       <div v-if="this.user.rol == 'REG'">
         <!-- Formulario para el estado del libro -->
-        <form @submit.prevent="handleSubmit">
+        <form  @submit.prevent="handleSubmit">
           <input type="number" v-model="book_status.id_book" name="id_book" hidden />
           <input type="number" v-model="book_status.id_user" name="id_user" hidden />
           <input type="text" v-model="book_status.status" name="status" hidden />
@@ -283,7 +283,7 @@ export default {
         </form>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-xl-4 col-md-12">
       <div class="rating">
         <span v-for="n in 5" :key="n" :class="{ filled: n <= rating.total }">★</span>
         {{ rating.total }}/5
@@ -381,10 +381,6 @@ textarea {
   height: 100px;
   width: -webkit-fill-available;
   resize: none;
-}
-
-form {
-  margin-top: 20%;
 }
 
 .comments {

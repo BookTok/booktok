@@ -170,6 +170,7 @@ export default {
 .thumbnail {
   margin-right: 20px; /* Espacio entre las miniaturas */
   margin-bottom: 20px; /* Espacio entre las filas de miniaturas */
+  width: 40%;
 }
 
 .thumbnail img {
@@ -187,6 +188,8 @@ export default {
 .info {
   margin-top: 10px;
   margin-left: 5px; /* Espacio entre la imagen y la información */
+  width: 50%;
+
 }
 
 .rating {

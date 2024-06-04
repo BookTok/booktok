@@ -114,10 +114,10 @@ export default {
 
 <style scoped>
 .details {
-  background-color: #f2f2f2;
+  background-color: #f2f2f25d;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
   max-width: -webkit-fill-available;
   max-height: -webkit-fill-available;
 }
