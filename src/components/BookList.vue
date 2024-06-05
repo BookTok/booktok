@@ -86,7 +86,10 @@ export default {
       } catch (error) {
         this.addMsgArray('danger', 'Error al enviar el estado del libro')
       }
-    }
+    },
+    details(id){
+            this.$router.push('/show-details/book/' + id)
+        }
   }
 }
 </script>
@@ -99,7 +102,7 @@ export default {
         <div class="thumbnail-content">
           <img :src="book.id_book.pic" />
           <div class="info">
-            <h5>{{ book.id_book.name }}</h5>
+            <h5 @click="details(book.id_book.id)">{{ book.id_book.name }}</h5>
             <p>{{ book.author }}</p>
             <p>{{ book.publisher }}</p>
             <div v-if="status == 'READING'">
@@ -112,11 +115,6 @@ export default {
               <div class="rating">
                 <span v-for="n in 5" :key="n" :class="{ filled: n <= book.rating }">★</span>
               </div>
-              <textarea
-                type="text"
-                v-model="book.comment"
-                placeholder="Escribe tu comentario"
-              ></textarea>
             </div>
             <div class="status">
               <form @submit.prevent="handleSubmit">
@@ -228,5 +226,9 @@ textarea {
 
 .filled {
   color: gold;
+}
+
+h5{
+  cursor: pointer;
 }
 </style>

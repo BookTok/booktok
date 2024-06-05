@@ -22,7 +22,7 @@ export default {
     },
     backgroundStyle() {
       return {
-        backgroundImage: `url('/photo.png')`,
+        backgroundImage: `url('/fondo.jpg')`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',

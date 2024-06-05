@@ -41,7 +41,7 @@ export default {
 
 <template>
   <nav class="row">
-    <div class="navar col-4 border-top border-bottom border-light">
+    <div class="navar col-4">
       <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
           <button
@@ -92,14 +92,14 @@ export default {
       </nav>
     </div>
     <div
-      class="navar-img col-4 border-top border-bottom border-light d-flex align-items-center justify-content-end text-center"
+      class="navar-img col-4 d-flex align-items-center justify-content-end text-center"
     >
     <div @click="index()">
       <img src="/Book__1.png" alt="booktok">
     </div>
     </div>
     <div
-      class="navar-end col-4 border-top border-bottom border-light d-flex align-items-center justify-content-end text-center"
+      class="navar-end col-4 d-flex align-items-center justify-content-end text-center"
     >
       <div class="navbar-nav">
         <div class="dropdown align-items-center justify-content-end" style="color: rgba(0,0,0,.55)">
