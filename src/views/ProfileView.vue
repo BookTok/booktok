@@ -319,7 +319,7 @@ h4 {
 .material-symbols-outlined {
   cursor: pointer;
   font-size: 35px;
-  color: #ffc559cf;
+  color: #ffebcdb5;
   font-variation-settings:
     'FILL' 0,
     'wght' 400,
